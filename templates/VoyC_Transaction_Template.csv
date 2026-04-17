@@ -1,0 +1,3 @@
+Report ID;Report Typ;Firma;Kontaktperson;Meeting Datum;Meeting Uhrzeit;Zusammenfassung;Zufriedenheit (1-10);Zufriedenheit Details;Vorgang Typ;Artikel/Produkt/Aufgabe;Menge;Einheit;Lieferoption;Lieferdatum;Frist;Status;Notizen;Nächstes Meeting;Ziel;Status;Transkript
+
+;;Berichtstyp (besuchsbericht, spesen, aufgabe, messbericht);Firmenname;Ansprechpartner;Datum;Uhrzeit;Zusammenfassung;Score;Details;bestellung/angebot/anfrage/aufgabe;Bezeichnung;Menge;Einheit;ab Werk/frei Haus;YYYY-MM-DD;YYYY-MM-DD;offen/in Bearbeitung;Notizen;Datum;Ziel;Bearbeitungsstatus;Vollständiger Text

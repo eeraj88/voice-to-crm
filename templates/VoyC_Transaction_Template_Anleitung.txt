@@ -1,0 +1,79 @@
+VoyC - Transaction-Based Template
+==========================================
+
+NEUES TRANSAKTIONS-BASED SYSTEM
+
+Statt statischer Spalten für Produkte/Aufgaben verwendet dieses System
+ein flexibles Transaktions-Modell. Ein Bericht kann beliebig viele
+Vorgänge (Transaktionen) enthalten, jeder als eigene Row im Sheet.
+
+SPALTEN (23 Spalten pro Row):
+
+HEADER-DATEN (wiederholen sich in jeder Row):
+1. Report ID           - Eindeutige Bericht-ID
+2. Report Typ          - Berichtstyp (besuchsbericht, spesen, aufgabe, messbericht)
+3. Firma               - Firmenname
+4. Kontaktperson       - Ansprechpartner
+5. Meeting Datum       - Datum des Treffens
+6. Meeting Uhrzeit     - Uhrzeit des Treffens
+7. Zusammenfassung      - Zusammenfassung des Gesprächs
+8. Zufriedenheit (1-10) - Score (1-10)
+9. Zufriedenheit Details - Details zur Zufriedenheit
+
+TRANSAKTIONS-DATEN (einzigartig pro Row):
+10. Vorgang Typ        - bestellung | angebot | anfrage | aufgabe
+11. Artikel/Produkt/Aufgabe - Bezeichnung des Produkts oder der Aufgabe
+12. Menge               - Menge (z.B. "5", "10-20", "ca. 100")
+13. Einheit             - Einheit (Stk, Tonnen, Palette, Meter, etc.)
+14. Lieferoption        - ab Werk, frei Haus, ab Lager, etc.
+15. Lieferdatum         - YYYY-MM-DD (für Bestellungen)
+16. Frist               - YYYY-MM-DD (für Angebote/Aufgaben)
+17. Status              - offen, in Bearbeitung, erledigt
+18. Notizen             - Zusätzliche Notizen
+
+FOOTER-DATEN (wiederholen sich in jeder Row):
+19. Nächstes Meeting    - Datum für Folgegespräch
+20. Ziel                - Ziel des Folgegesprächs
+21. Status              - Bearbeitungsstatus des Berichts
+22. Transkript          - Vollständiger Transkript-Text
+
+==========================================
+
+BEISPIEL:
+
+Ein Besuch mit 2 Bestellungen und 1 Aufgabe erzeugt 3 Rows:
+
+Row 1: Header-Daten + Bestellung 1 (Produkt A, 5 Stück)
+Row 2: Header-Daten + Bestellung 2 (Produkt B, 10 Tonnen)
+Row 3: Header-Daten + Aufgabe (Angebot erstellen bis Freitag)
+
+==========================================
+
+VORTEILE:
+
+- Unbegrenzte Produkte/Aufgaben pro Bericht
+- Typen können gemischt werden (Bestellung + Angebot + Aufgabe)
+- ERP-ready durch strukturierte Transaktionen
+- Einfach zu filtern und auszuwerten
+
+==========================================
+
+FORMATIERUNG:
+
+- Alle Spalten: Text
+- Breite: Auto
+- Ausrichtung: Links
+- Header: Fett, Hintergrund: Hellgrau
+- Zeilenhöhe: Auto
+
+==========================================
+
+IMPORTIERUNG IN GOOGLE SHEETS:
+
+1. Google Sheet öffnen
+2. "Datei" → "Importieren"
+3. Tab getrennte Datei hochladen
+4. Trennzeichen: Semikolon (;)
+5. "Importieren"
+
+==========================================

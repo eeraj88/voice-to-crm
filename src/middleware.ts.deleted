@@ -1,0 +1,51 @@
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
+
+export async function middleware(req: NextRequest) {
+  let supabaseResponse = NextResponse.next({
+    request: {
+      headers: new Headers(req.headers),
+    },
+  })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return Object.entries(req.cookies).map(([name, value]) => ({
+            name,
+            value,
+          }))
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            req.cookies.set(name, value)
+            supabaseResponse.cookies.set(name, value, options)
+          })
+        },
+      },
+    }
+  )
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  // Wenn User nicht eingeloggt ist und geschützte Seite aufruft
+  if (!session && req.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login', req.url))
+  }
+
+  // Wenn User eingeloggt ist und Login-Seite aufruft
+  if (session && req.nextUrl.pathname.startsWith('/login')) {
+    return NextResponse.redirect(new URL('/dashboard', req.url))
+  }
+
+  return supabaseResponse
+}
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/login'],
+}

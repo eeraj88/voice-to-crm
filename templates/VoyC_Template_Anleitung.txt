@@ -1,0 +1,70 @@
+VoyC - Kundenberichte Template
+
+==========================================
+
+SPALTEN (26 Spalten):
+
+1. ID                  - Bericht-ID
+2. Datum               - Erstellungsdatum
+3. Typ                 - Berichtstyp (besuchsbericht, spesen, aufgabe, messbericht)
+4. Firma               - Firmenname
+5. Kontaktperson       - Ansprechpartner
+6. Meeting Datum       - Datum des Treffens
+7. Meeting Uhrzeit     - Uhrzeit des Treffens
+8. Zusammenfassung      - Zusammenfassung des Gesprächs
+9. Zufriedenheit       - Score (1-10)
+10. Zufriedenheit-Details - Details zur Zufriedenheit
+11. Produkt 1           - Erstes Produkt
+12. Menge 1             - Menge des ersten Produkts
+13. Lieferdatum 1       - Lieferdatum des ersten Produkts
+14. Notizen 1           - Notizen zum ersten Produkt
+15. Produkt 2           - Zweites Produkt
+16. Menge 2             - Menge des zweiten Produkts
+17. Lieferdatum 2       - Lieferdatum des zweiten Produkts
+18. Notizen 2           - Notizen zum zweiten Produkt
+19. Produkt 3           - Drittes Produkt
+20. Menge 3             - Menge des dritten Produkts
+21. Lieferdatum 3       - Lieferdatum des dritten Produkts
+22. Notizen 3           - Notizen zum dritten Produkt
+23. Aufgabe 1           - Erste Aufgabe
+24. Frist 1             - Frist der ersten Aufgabe
+25. Dringlichkeit 1      - Dringlichkeit der ersten Aufgabe
+26. Zugewiesen an 1     - Zuständige Person der ersten Aufgabe
+27. Aufgabe 2           - Zweite Aufgabe
+28. Frist 2             - Frist der zweiten Aufgabe
+29. Dringlichkeit 2      - Dringlichkeit der zweiten Aufgabe
+30. Zugewiesen an 2     - Zuständige Person der zweiten Aufgabe
+31. Nächstes Meeting     - Datum für Folgegespräch
+32. Ziel                - Ziel des Folgegesprächs
+33. Status              - Bearbeitungsstatus
+34. Transkript          - Vollständiger Transkript-Text
+
+==========================================
+
+FORMATIERUNG:
+
+- Alle Spalten: Text (außer Mengen: Zahl)
+- Breite: Auto
+- Ausrichtung: Links (außer Zahlen: Mitte)
+- Header: Fett, Hintergrund: Hellgrau
+- Zeilenhöhe: Auto
+
+==========================================
+
+IMPORTIERUNG IN GOOGLE SHEETS:
+
+1. Google Sheet öffnen
+2. "Datei" → "Importieren"
+3. Tab getrennte Datei hochladen
+4. Trennzeichen: Semikolon (;)
+5. "Importieren"
+
+==========================================
+
+FERTIG ZUR VERWENDUNG!
+
+Neukunde können:
+1. Template importieren
+2. Bericht aufnehmen
+3. "Senden" klicken
+4. Daten erscheinen automatisch in den Spalten
