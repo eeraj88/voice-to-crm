@@ -180,7 +180,19 @@ export default function HomePage() {
       </nav>
 
       {/* ========== HERO SECTION WITH VIDEO ========== */}
-      <section ref={heroRef} className="relative z-10 min-h-screen flex items-center justify-center">
+      <section ref={heroRef} className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Animated Background Orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Large top-left orb */}
+          <div className="hero-orb-1 absolute top-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-emerald-950/40 via-teal-950/30 to-emerald-900/20 blur-[120px]" />
+          {/* Medium bottom-right orb */}
+          <div className="hero-orb-2 absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tl from-teal-950/40 via-emerald-950/30 to-teal-900/20 blur-[100px]" />
+          {/* Small center-right orb with pulse */}
+          <div className="hero-orb-3 hero-orb-pulse absolute top-[30%] right-[10%] w-[300px] h-[300px] rounded-full bg-gradient-to-br from-emerald-900/30 via-teal-900/20 to-emerald-950/10 blur-[80px]" />
+          {/* Extra dark contrast orb */}
+          <div className="hero-orb-1 absolute bottom-[20%] left-[15%] w-[400px] h-[400px] rounded-full bg-black/30 blur-[150px] hero-orb-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
