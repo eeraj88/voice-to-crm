@@ -233,9 +233,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      {/* ========== HOW IT WORKS ========== */}
+    {/* ========== HOW IT WORKS ========== */}
       <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
