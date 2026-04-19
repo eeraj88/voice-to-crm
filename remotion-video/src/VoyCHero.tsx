@@ -5,12 +5,12 @@ import {
   spring,
 } from "remotion";
 
-// Dark background matching website sections
+// Background matching new color scheme: Emerald/Teal Dark
 const Background = () => {
   return (
     <AbsoluteFill
       style={{
-        background: "linear-gradient(180deg, #022c22 0%, #0f766e 40%, #0f172a 80%, #0c4a6e 100%)",
+        background: "linear-gradient(180deg, #022c22 0%, #0f373e 40%, #0f172a 85%, #020617 100%)",
       }}
     />
   );
