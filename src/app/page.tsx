@@ -205,8 +205,8 @@ export default function HomePage() {
           >
             <source src="/videos/hero-video.mp4" type="video/mp4" />
           </video>
-          {/* Subtle Overlay for text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20" />
+          {/* Gradient Overlay - lighter for light mode */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white/60 dark:from-black/10 dark:via-transparent dark:to-black/40" />
         </div>
 
         {/* Content */}

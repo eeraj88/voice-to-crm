@@ -5,12 +5,12 @@ import {
   spring,
 } from "remotion";
 
-// Background matching new color scheme: Emerald/Teal Dark
+// Universal background for both light and dark mode
 const Background = () => {
   return (
     <AbsoluteFill
       style={{
-        background: "linear-gradient(180deg, #022c22 0%, #0f373e 40%, #0f172a 85%, #020617 100%)",
+        background: "linear-gradient(180deg, #f0fdf4 0%, #ccfbf1 40%, #e0f2fe 85%, #f0f9ff 100%)",
       }}
     />
   );
@@ -40,7 +40,7 @@ const VoyCText = ({ frame }: { frame: number }) => {
         fontFamily: "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
         fontSize: 440,
         fontWeight: 900,
-        background: "linear-gradient(135deg, #ffffff 0%, #5eead4 100%)",
+        background: "linear-gradient(135deg, #064e3b 0%, #0f766e 100%)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
