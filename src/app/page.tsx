@@ -322,11 +322,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </div>
     </section>
 
       {/* ========== FEATURES SECTION ========== */}
-      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
+      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-1 absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/8 blur-[150px]" />
@@ -487,8 +486,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
       {/* ========== PRICING SECTION ========== */}
       <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
@@ -596,8 +594,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
       {/* ========== CONTACT SECTION ========== */}
       <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
