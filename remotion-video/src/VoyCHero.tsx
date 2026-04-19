@@ -5,12 +5,12 @@ import {
   spring,
 } from "remotion";
 
-// Dark background matching website colors
+// Dark background matching website sections
 const Background = () => {
   return (
     <AbsoluteFill
       style={{
-        background: "linear-gradient(180deg, #022c22 0%, #0f766e 50%, #000000 100%)",
+        background: "linear-gradient(180deg, #022c22 0%, #0f766e 40%, #0f172a 80%, #0c4a6e 100%)",
       }}
     />
   );
@@ -40,7 +40,7 @@ const VoyCText = ({ frame }: { frame: number }) => {
         fontFamily: "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
         fontSize: 440,
         fontWeight: 900,
-        background: "linear-gradient(135deg, #f0fdf4 0%, #99f6e4 100%)",
+        background: "linear-gradient(135deg, #ffffff 0%, #5eead4 100%)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
