@@ -320,14 +320,14 @@ export default function HomePage() {
       </section>
 
       {/* ========== FEATURES SECTION ========== */}
-      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/90 dark:via-zinc-950/80 dark:to-emerald-950/90 overflow-hidden">
+      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-1 absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[150px]" />
-          <div className="hero-orb-2 absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-teal-500/10 blur-[120px]" />
+          <div className="hero-orb-1 absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/8 blur-[150px]" />
+          <div className="hero-orb-2 absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-teal-500/6 blur-[120px]" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/50 to-teal-100/50 dark:from-emerald-900/50 dark:to-teal-900/50 -mx-6 px-6 py-8 rounded-3xl">
+          <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/30 to-teal-100/20 dark:from-zinc-900/60 dark:to-stone-900/50 -mx-6 px-6 py-8 rounded-3xl border border-emerald-200/30 dark:border-emerald-900/30">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Warum VoyC?
             </h2>
@@ -479,14 +479,14 @@ export default function HomePage() {
       </section>
 
       {/* ========== PRICING SECTION ========== */}
-      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/90 dark:via-zinc-950/80 dark:to-emerald-950/90 overflow-hidden">
+      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-3 absolute top-[-10%] left-[20%] w-[450px] h-[450px] rounded-full bg-emerald-500/10 blur-[140px]" />
-          <div className="hero-orb-1 absolute bottom-[-15%] right-[-5%] w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[160px]" />
+          <div className="hero-orb-3 absolute top-[-10%] left-[20%] w-[450px] h-[450px] rounded-full bg-emerald-500/8 blur-[140px]" />
+          <div className="hero-orb-1 absolute bottom-[-15%] right-[-5%] w-[500px] h-[500px] rounded-full bg-teal-500/6 blur-[160px]" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/50 to-teal-100/50 dark:from-emerald-900/50 dark:to-teal-900/50 -mx-6 px-6 py-8 rounded-3xl">
+          <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/30 to-teal-100/20 dark:from-zinc-900/60 dark:to-stone-900/50 -mx-6 px-6 py-8 rounded-3xl border border-emerald-200/30 dark:border-emerald-900/30">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Transparente Preise
             </h2>
