@@ -5,12 +5,12 @@ import {
   spring,
 } from "remotion";
 
-// Dark background
+// Dark background with emerald gradient to match website
 const Background = () => {
   return (
     <AbsoluteFill
       style={{
-        background: "radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%)",
+        background: "linear-gradient(180deg, #022c22 0%, #0f172a 50%, #020617 100%)",
       }}
     />
   );
@@ -38,9 +38,9 @@ const VoyCText = ({ frame }: { frame: number }) => {
         transform: `translate(-50%, -50%) scale(${scale})`,
         opacity,
         fontFamily: "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
-        fontSize: 220,
+        fontSize: 440,
         fontWeight: 900,
-        background: "linear-gradient(135deg, #ffffff 0%, #10b981 100%)",
+        background: "linear-gradient(135deg, #ffffff 0%, #34d399 100%)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
