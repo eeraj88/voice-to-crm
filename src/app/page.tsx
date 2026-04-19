@@ -235,8 +235,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
     {/* ========== HOW IT WORKS ========== */}
     <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32">
