@@ -327,7 +327,7 @@ export default function HomePage() {
           <div className="hero-orb-2 absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-teal-500/10 blur-[120px]" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/50 to-teal-100/50 dark:from-emerald-900/50 dark:to-teal-900/50 -mx-6 px-6 py-8 rounded-3xl">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Warum VoyC?
             </h2>
@@ -423,7 +423,7 @@ export default function HomePage() {
       {/* ========== TESTIMONIALS SECTION ========== */}
       <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-slate-950 dark:via-zinc-950 dark:to-slate-950">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 bg-gradient-to-b from-slate-100/50 to-gray-100/50 dark:from-slate-900/50 dark:to-zinc-900/50 -mx-6 px-6 py-8 rounded-3xl">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Was unsere Kunden sagen
             </h2>
@@ -486,7 +486,7 @@ export default function HomePage() {
           <div className="hero-orb-1 absolute bottom-[-15%] right-[-5%] w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[160px]" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/50 to-teal-100/50 dark:from-emerald-900/50 dark:to-teal-900/50 -mx-6 px-6 py-8 rounded-3xl">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Transparente Preise
             </h2>
