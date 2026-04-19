@@ -343,4 +343,96 @@ dark:from-emerald-400 dark:via-teal-400 dark:to-green-400
 
 ---
 
+---
+
+## Nachtrag: Vercel Deployment Issues 🔴
+
+### Problem 1: useRef Build Error ✅ BEHOBEN
+
+**Fehler:**
+```
+./src/components/ui/moving-border.tsx:85:19
+Type error: Expected 1 arguments, but got 0.
+const pathRef = useRef<any>();
+```
+
+**Lösung:**
+```tsx
+// Vorher:
+const pathRef = useRef<any>();
+
+// Jetzt:
+const pathRef = useRef<any>(null);
+```
+
+**Commit:** `6783a44` - "Fix build error: useRef needs initial value in React 19"
+
+### Problem 2: Missing Environment Variables ✅ BEHOBEN
+
+**Fehler:**
+```
+Error: supabaseUrl is required.
+Error: Failed to collect page data for /api/save-report
+```
+
+**Lösung:** Environment Variables in Vercel hinzugefügt
+
+| Key | Value |
+|-----|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `[Supabase Project URL]` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `[Supabase Anon Key]` |
+| `GROQ_API_KEY` | `[Groq API Key]` |
+| `MAKE_WEBHOOK_URL` | `[Make.com Webhook URL]` |
+
+### Problem 3: Build Failed auf Vercel 🔴 AKTIV
+
+**Status:** Build schlägt weiterhin fehl trotz Environment Variables
+
+**Letzter Deployment:**
+- Commit: `6783a44`
+- Status: Error
+- Dauer: 29s
+- Fehler: Build schlägt fehl
+
+**Live URL:** https://voice-to-d15q6tasb-eerajjn-6530s-projects.vercel.app
+
+**Nächste Schritte:**
+- [ ] Build Logs analysieren
+- [ ] Weitere Fehler suchen
+- [ ] Local build mit env vars testen
+
+---
+
+---
+
+---
+
+## 2026-04-19 - Deployment Fix ✅
+
+### Problem: Environment Variables fehlten auf Vercel
+
+**Fehler:**
+- Build war erfolgreich, aber App funktionierte nicht
+- `NEXT_PUBLIC_` Variablen waren nicht im Vercel Dashboard gesetzt
+
+**Lösung:**
+Environment Variables in Vercel Dashboard hinzugefügt:
+
+| Name | Value |
+|------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `[Supabase Project URL]` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `[Supabase Anon Key]` |
+| `GROQ_API_KEY` | `[Groq API Key]` |
+| `MAKE_WEBHOOK_URL` | `[Make.com Webhook URL]` |
+
+**Schritte:**
+1. Vercel Dashboard → Settings → Environment Variables
+2. Alle 4 Variablen hinzugefügt
+3. "All Environments" aktiviert
+4. Redeploy ausgeführt
+
+**Status:** ✅ Deployment erfolgreich
+
+---
+
 *Ende des Protokolls* ✅

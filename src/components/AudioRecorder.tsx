@@ -364,7 +364,7 @@ export default function AudioRecorder({ onReportSaved }: AudioRecorderProps) {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full">
       {/* Fehlermeldung */}
       {error && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
@@ -383,289 +383,363 @@ export default function AudioRecorder({ onReportSaved }: AudioRecorderProps) {
 
       {/* Ergebnis-Card */}
       {result && editedData && (
-        <div className="mb-6 p-6 glass-card rounded-2xl">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">KI hat verarbeitet</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Du kannst die Daten noch bearbeiten</p>
+        <div className="mb-6 glass-card rounded-3xl overflow-hidden">
+          {/* Header mit Gradient */}
+          <div className="gradient-bg p-6 text-white">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">Bericht erstellt!</h3>
+                <p className="text-sm text-white/80">Du kannst alles noch anpassen</p>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-4">
-            {/* Transkript */}
-            <div>
-              <label className="text-sm font-medium text-zinc-300 mb-1 block">
-                Transkript
-              </label>
-              <p className="text-sm text-zinc-400 glass-input p-3 rounded-xl">
-                {result.transcript}
-              </p>
-            </div>
+          <div className="p-6 space-y-6">
+            {/* Transkript - Accordion Style */}
+            <details className="group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 glass rounded-2xl hover:bg-white/90 dark:hover:bg-white/5 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+                    <svg className="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-white">Gesprochener Text</p>
+                    <p className="text-xs text-gray-500">Original-Transkript anzeigen</p>
+                  </div>
+                </div>
+                <svg className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div className="mt-3 p-4 bg-gray-50 dark:bg-zinc-900/50 rounded-2xl">
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {result.transcript}
+                </p>
+              </div>
+            </details>
 
-            {/* Bearbeitbare Felder */}
-            <div className="glass p-4 rounded-xl space-y-4 text-sm">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-zinc-400 mb-1 block">
-                    Typ
-                  </label>
-                  <select
-                    value={editedData.report_type}
-                    onChange={(e) => setEditedData({ ...editedData, report_type: e.target.value as any })}
-                    className="w-full px-3 py-2 glass-input rounded-xl text-white placeholder:text-zinc-500"
-                  >
-                    <option value="besuchsbericht">Besuchsbericht</option>
-                    <option value="messbericht">Messebericht</option>
-                    <option value="spesen">Spesen</option>
-                    <option value="aufgabe">Aufgabe</option>
-                  </select>
+            {/* Bearbeitbare Felder - Card Style */}
+            <div className="space-y-5">
+              {/* Report Typ Badge */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Typ:</span>
+                <div className="flex gap-2 flex-wrap">
+                  {['besuchsbericht', 'messbericht', 'spesen', 'aufgabe'].map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => setEditedData({ ...editedData, report_type: type as any })}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        editedData.report_type === type
+                          ? 'gradient-bg text-white shadow-lg shadow-emerald-500/30'
+                          : 'glass text-gray-600 dark:text-gray-400 hover:bg-white/90 dark:hover:bg-white/10'
+                      }`}
+                    >
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-zinc-400 mb-1 block">
+              {/* Firma & Kontakt - Full Width Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="glass p-4 rounded-2xl space-y-2">
+                  <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                     Firmenname
                   </label>
                   <input
                     type="text"
                     value={editedData.company_name}
                     onChange={(e) => setEditedData({ ...editedData, company_name: e.target.value })}
-                    className="w-full px-3 py-2 glass-input rounded-xl text-white placeholder:text-zinc-500"
+                    className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                    placeholder="z.B. Müller GmbH"
                   />
                 </div>
 
-                <div>
-                  <label className="text-xs font-medium text-zinc-400 mb-1 block">
+                <div className="glass p-4 rounded-2xl space-y-2">
+                  <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                     Kontaktperson
                   </label>
                   <input
                     type="text"
                     value={editedData.contact_person}
                     onChange={(e) => setEditedData({ ...editedData, contact_person: e.target.value })}
-                    className="w-full px-3 py-2 glass-input rounded-xl text-white placeholder:text-zinc-500"
+                    className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                    placeholder="z.B. Herr Müller"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="text-xs font-medium text-zinc-400 mb-1 block">
+              {/* Zusammenfassung - Large Card */}
+              <div className="glass p-4 rounded-2xl space-y-2">
+                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                   Zusammenfassung
                 </label>
                 <textarea
                   value={editedData.summary}
                   onChange={(e) => setEditedData({ ...editedData, summary: e.target.value })}
-                  rows={2}
-                  className="w-full px-3 py-2 glass-input rounded-xl text-white placeholder:text-zinc-500 resize-none"
+                  rows={3}
+                  className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all resize-none"
+                  placeholder="Was wurde besprochen?"
                 />
               </div>
 
               {/* Vorgänge (Transactions) */}
-              <div className="border-t border-white/10 pt-4">
-                <div className="flex justify-between items-center mb-3">
-                  <label className="text-xs font-semibold text-zinc-300 mb-0 block">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
                     Vorgänge ({editedData.transactions.length})
-                  </label>
+                  </h4>
                   <button
                     onClick={addTransaction}
-                    className="px-3 py-1.5 gradient-bg text-white text-sm font-medium rounded-lg hover:shadow-lg hover:shadow-emerald-500/30 transition-all flex items-center gap-1"
+                    className="px-4 py-2 gradient-bg text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-emerald-500/30 transition-all flex items-center gap-2"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    Hinzufügen
+                    Neu
                   </button>
                 </div>
 
-                {editedData.transactions.map((trans, idx) => (
-                  <div key={idx} className="bg-zinc-800/50 dark:bg-zinc-900/50 p-3 rounded-xl mb-2 border border-emerald-500/20">
-                    <div className="grid grid-cols-2 gap-2 mb-2">
-                      <div>
-                        <label className="text-xs text-zinc-400 mb-1 block">Typ</label>
-                        <select
-                          value={trans.type}
-                          onChange={(e) => updateTransaction(idx, 'type', e.target.value)}
-                          className="w-full px-2 py-1.5 text-xs glass-input rounded-lg text-white"
-                        >
-                          <option value="bestellung">Bestellung</option>
-                          <option value="angebot">Angebot</option>
-                          <option value="anfrage">Anfrage</option>
-                          <option value="aufgabe">Aufgabe</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="text-xs text-zinc-400 mb-1 block">Status</label>
-                        <select
-                          value={trans.status}
-                          onChange={(e) => updateTransaction(idx, 'status', e.target.value)}
-                          className="w-full px-2 py-1.5 text-xs glass-input rounded-lg text-white"
-                        >
-                          <option value="neu">Neu</option>
-                          <option value="in Bearbeitung">In Bearbeitung</option>
-                          <option value="abgeschlossen">Abgeschlossen</option>
-                        </select>
-                      </div>
+                {editedData.transactions.length === 0 ? (
+                  <div className="glass p-8 rounded-2xl text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center">
+                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
                     </div>
-
-                    <div className="grid grid-cols-3 gap-2 mb-2">
-                      <input
-                        type="text"
-                        value={trans.item}
-                        onChange={(e) => updateTransaction(idx, 'item', e.target.value)}
-                        placeholder="Artikel / Produkt"
-                        className="px-2 py-1.5 text-xs glass-input rounded-lg text-white placeholder:text-zinc-500"
-                      />
-                      <input
-                        type="number"
-                        value={trans.quantity}
-                        onChange={(e) => updateTransaction(idx, 'quantity', e.target.value)}
-                        placeholder="Menge"
-                        className="px-2 py-1.5 text-xs glass-input rounded-lg text-white placeholder:text-zinc-500"
-                      />
-                      <input
-                        type="text"
-                        value={trans.unit}
-                        onChange={(e) => updateTransaction(idx, 'unit', e.target.value)}
-                        placeholder="Einheit"
-                        className="px-2 py-1.5 text-xs glass-input rounded-lg text-white placeholder:text-zinc-500"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 mb-2">
-                      <input
-                        type="text"
-                        value={trans.delivery}
-                        onChange={(e) => updateTransaction(idx, 'delivery', e.target.value)}
-                        placeholder="Lieferort / Adresse"
-                        className="px-2 py-1.5 text-xs glass-input rounded-lg text-white placeholder:text-zinc-500"
-                      />
-                      <input
-                        type="date"
-                        value={trans.delivery_date}
-                        onChange={(e) => updateTransaction(idx, 'delivery_date', e.target.value)}
-                        className="px-2 py-1.5 text-xs glass-input rounded-lg text-white placeholder:text-zinc-500"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 mb-2">
-                      <input
-                        type="date"
-                        value={trans.deadline}
-                        onChange={(e) => updateTransaction(idx, 'deadline', e.target.value)}
-                        placeholder="Frist"
-                        className="px-2 py-1.5 text-xs glass-input rounded-lg text-white placeholder:text-zinc-500"
-                      />
-                      <input
-                        type="text"
-                        value={trans.notes}
-                        onChange={(e) => updateTransaction(idx, 'notes', e.target.value)}
-                        placeholder="Notizen"
-                        className="px-2 py-1.5 text-xs glass-input rounded-lg text-white placeholder:text-zinc-500"
-                      />
-                    </div>
-
-                    <button
-                      onClick={() => removeTransaction(idx)}
-                      className="text-xs text-red-400 hover:text-red-300 transition-colors"
-                    >
-                      Entfernen
-                    </button>
+                    <p className="text-gray-500 dark:text-gray-400">Keine Vorgänge vorhanden</p>
+                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Füge Aufgaben, Bestellungen oder Angebote hinzu</p>
                   </div>
-                ))}
+                ) : (
+                  <div className="space-y-3">
+                    {editedData.transactions.map((trans, idx) => (
+                      <div key={idx} className="glass p-5 rounded-2xl border-2 border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
+                        {/* Header mit Typ & Status */}
+                        <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 dark:border-white/10">
+                          <select
+                            value={trans.type}
+                            onChange={(e) => updateTransaction(idx, 'type', e.target.value)}
+                            className="px-4 py-2 bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded-xl text-sm font-medium border border-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                          >
+                            <option value="bestellung">📦 Bestellung</option>
+                            <option value="angebot">📄 Angebot</option>
+                            <option value="anfrage">❓ Anfrage</option>
+                            <option value="aufgabe">✅ Aufgabe</option>
+                          </select>
+                          <div className="flex items-center gap-2">
+                            <select
+                              value={trans.status}
+                              onChange={(e) => updateTransaction(idx, 'status', e.target.value)}
+                              className="px-3 py-2 bg-gray-100 dark:bg-zinc-800 rounded-xl text-xs font-medium border border-gray-200 dark:border-white/10"
+                            >
+                              <option value="neu">🔄 Neu</option>
+                              <option value="in Bearbeitung">⏳ In Bearbeitung</option>
+                              <option value="abgeschlossen">✓ Abgeschlossen</option>
+                            </select>
+                            <button
+                              onClick={() => removeTransaction(idx)}
+                              className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Details */}
+                        <div className="space-y-3">
+                          {/* Produkt/Artikel */}
+                          <div>
+                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Artikel / Produkt</label>
+                            <input
+                              type="text"
+                              value={trans.item}
+                              onChange={(e) => updateTransaction(idx, 'item', e.target.value)}
+                              placeholder="z.B. Ersatzteile für Maschine X"
+                              className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                            />
+                          </div>
+
+                          {/* Menge & Einheit */}
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Menge</label>
+                              <input
+                                type="number"
+                                value={trans.quantity}
+                                onChange={(e) => updateTransaction(idx, 'quantity', e.target.value)}
+                                placeholder="z.B. 10"
+                                className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Einheit</label>
+                              <input
+                                type="text"
+                                value={trans.unit}
+                                onChange={(e) => updateTransaction(idx, 'unit', e.target.value)}
+                                placeholder="z.B. Stück, kg"
+                                className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Lieferort & Datum */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Lieferort</label>
+                              <input
+                                type="text"
+                                value={trans.delivery}
+                                onChange={(e) => updateTransaction(idx, 'delivery', e.target.value)}
+                                placeholder="z.B. Hauptlager Berlin"
+                                className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Lieferdatum</label>
+                              <input
+                                type="date"
+                                value={trans.delivery_date}
+                                onChange={(e) => updateTransaction(idx, 'delivery_date', e.target.value)}
+                                className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Frist & Notizen */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Frist</label>
+                              <input
+                                type="date"
+                                value={trans.deadline}
+                                onChange={(e) => updateTransaction(idx, 'deadline', e.target.value)}
+                                className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Notizen</label>
+                              <input
+                                type="text"
+                                value={trans.notes}
+                                onChange={(e) => updateTransaction(idx, 'notes', e.target.value)}
+                                placeholder="z.B. Eilig,_PRIORITY"
+                                className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Zufriedenheit */}
-              <div className="border-t border-white/10 pt-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs text-zinc-400 mb-1 block">
-                      Score (1-10)
-                    </label>
+              {/* Zufriedenheit & Nächstes Meeting */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Zufriedenheit */}
+                <div className="glass p-4 rounded-2xl space-y-3">
+                  <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Kundenzufriedenheit
+                  </label>
+                  <div className="flex items-center gap-4">
                     <input
-                      type="number"
+                      type="range"
                       min="1"
                       max="10"
                       value={editedData.satisfaction_score}
                       onChange={(e) => setEditedData({ ...editedData, satisfaction_score: parseInt(e.target.value) || 5 })}
-                      className="w-full px-3 py-2 glass-input rounded-xl text-white placeholder:text-zinc-500"
+                      className="flex-1 h-2 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                     />
+                    <div className="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                      {editedData.satisfaction_score}
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-xs text-zinc-400 mb-1 block">
-                      Notizen
-                    </label>
-                    <input
-                      type="text"
-                      value={editedData.satisfaction_notes}
-                      onChange={(e) => setEditedData({ ...editedData, satisfaction_notes: e.target.value })}
-                      placeholder="Zufriedenheit Details"
-                      className="w-full px-3 py-2 glass-input rounded-xl text-white placeholder:text-zinc-500"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={editedData.satisfaction_notes}
+                    onChange={(e) => setEditedData({ ...editedData, satisfaction_notes: e.target.value })}
+                    placeholder="z.B. Sehr zufrieden, schneller Service"
+                    className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                  />
                 </div>
-              </div>
 
-              {/* Nächstes Meeting */}
-              <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
-                <div>
-                  <label className="text-xs text-zinc-400 mb-1 block">
+                {/* Nächstes Meeting */}
+                <div className="glass p-4 rounded-2xl space-y-3">
+                  <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
                     Nächstes Meeting
                   </label>
                   <input
                     type="date"
                     value={editedData.next_meeting_date}
                     onChange={(e) => setEditedData({ ...editedData, next_meeting_date: e.target.value })}
-                    className="w-full px-3 py-2 glass-input rounded-xl text-white placeholder:text-zinc-500"
+                    className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                   />
-                </div>
-                <div>
-                  <label className="text-xs text-zinc-400 mb-1 block">
-                    Ziel
-                  </label>
                   <input
                     type="text"
                     value={editedData.next_meeting_purpose}
                     onChange={(e) => setEditedData({ ...editedData, next_meeting_purpose: e.target.value })}
-                    placeholder="Ziel des Treffens"
-                    className="w-full px-3 py-2 glass-input rounded-xl text-white placeholder:text-zinc-500"
+                    placeholder="z.B. Angebot präsentieren"
+                    className="w-full px-4 py-3 bg-white dark:bg-zinc-900 rounded-xl text-sm border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Buttons */}
-            <div className="grid grid-cols-3 gap-3">
-              <button
-                onClick={saveToDatabase}
-                disabled={saving}
-                className="py-3 px-4 gradient-bg text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-              >
-                {saving ? 'Speichern...' : 'Speichern'}
-              </button>
-              <button
-                onClick={saveAndSend}
-                disabled={saving}
-                className="py-3 px-4 gradient-bg text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-              >
-                {saving ? 'Senden...' : 'Speichern & Senden'}
-              </button>
+            {/* Action Buttons - Large & Touch-Friendly */}
+            <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-white/10">
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={saveToDatabase}
+                  disabled={saving}
+                  className="py-4 px-6 glass text-gray-700 dark:text-gray-300 font-semibold rounded-2xl hover:bg-white/90 dark:hover:bg-white/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  {saving ? 'Speichern...' : 'Speichern'}
+                </button>
+                <button
+                  onClick={saveAndSend}
+                  disabled={saving}
+                  className="py-4 px-6 gradient-bg text-white font-semibold rounded-2xl hover:shadow-xl hover:shadow-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                  {saving ? 'Senden...' : 'Speichern & Senden'}
+                </button>
+              </div>
               <button
                 onClick={discardRecording}
                 disabled={saving}
-                className="py-3 px-4 glass text-zinc-300 font-semibold rounded-xl hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                className="w-full py-3 px-6 text-gray-500 dark:text-gray-400 font-medium rounded-xl hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Neu
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Neu starten
               </button>
-            </div>
 
-            <p className="text-xs text-zinc-500 text-center mt-3">
-              Speichern = lokal | Speichern & Senden = an Make.com
-            </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 text-center pt-2">
+                💾 Speichern = lokal | 🚀 Speichern & Senden = an Make.com
+              </p>
+            </div>
           </div>
         </div>
       )}

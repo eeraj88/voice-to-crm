@@ -124,8 +124,8 @@ export default function DashboardPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-10 relative z-10">
-        <div className="max-w-5xl mx-auto">
+      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 relative z-10">
+        <div className="max-w-4xl mx-auto">
           {!showHistory ? (
             <>
               {/* Welcome Section */}
@@ -139,7 +139,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Audio Recorder */}
-              <div className="glass-card rounded-3xl p-10 mb-8">
+              <div className="glass-card rounded-3xl p-6 sm:p-8 mb-8">
                 <div className="text-center mb-8">
                   <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
                     Sprachnachricht aufnehmen
