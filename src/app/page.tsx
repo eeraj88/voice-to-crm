@@ -205,8 +205,8 @@ export default function HomePage() {
           >
             <source src="/videos/hero-video.mp4" type="video/mp4" />
           </video>
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/70 via-teal-950/50 to-transparent" />
+          {/* Subtle Overlay for text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20" />
         </div>
 
         {/* Content */}
@@ -250,7 +250,7 @@ export default function HomePage() {
       </section>
 
     {/* ========== HOW IT WORKS ========== */}
-    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32">
+    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-950 via-zinc-950 to-slate-950">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -320,7 +320,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== FEATURES SECTION ========== */}
-      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-white/50 via-emerald-50/20 to-cyan-50/20 dark:from-zinc-900/50 dark:via-emerald-950/20 dark:to-cyan-950/20">
+      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950 dark:via-teal-950 dark:to-emerald-950">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -416,7 +416,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== TESTIMONIALS SECTION ========== */}
-      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-cyan-50/20 to-teal-50/30 dark:from-cyan-950/20 dark:to-teal-950/30">
+      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-slate-950 dark:via-zinc-950 dark:to-slate-950">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -474,7 +474,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== PRICING SECTION ========== */}
-      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-teal-50/30 to-cyan-50/30 dark:from-teal-950/20 dark:to-cyan-950/20">
+      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950 dark:via-teal-950 dark:to-emerald-950">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -577,7 +577,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== CONTACT SECTION ========== */}
-      <section id="kontakt" className="relative z-10 py-24 lg:py-32">
+      <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-slate-950 dark:via-zinc-950 dark:to-slate-950">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
