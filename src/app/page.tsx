@@ -320,7 +320,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== FEATURES SECTION ========== */}
-      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950 dark:via-teal-950 dark:to-emerald-950 overflow-hidden">
+      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/90 dark:via-zinc-950/80 dark:to-emerald-950/90 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-1 absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[150px]" />
@@ -479,7 +479,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== PRICING SECTION ========== */}
-      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950 dark:via-teal-950 dark:to-emerald-950 overflow-hidden">
+      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/90 dark:via-zinc-950/80 dark:to-emerald-950/90 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-3 absolute top-[-10%] left-[20%] w-[450px] h-[450px] rounded-full bg-emerald-500/10 blur-[140px]" />
