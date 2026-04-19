@@ -239,7 +239,7 @@ export default function HomePage() {
     </section>
 
     {/* ========== HOW IT WORKS ========== */}
-      <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32">
+    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
