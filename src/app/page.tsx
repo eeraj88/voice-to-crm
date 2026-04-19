@@ -106,17 +106,17 @@ export default function HomePage() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
-              <a href="#features" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            <div className="hidden lg:flex items-center gap-4">
+              <a href="#features" className="px-5 py-2.5 rounded-xl border-2 border-emerald-200/30 dark:border-emerald-500/30 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
                 Features
               </a>
-              <a href="#wie-es-funktioniert" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              <a href="#wie-es-funktioniert" className="px-5 py-2.5 rounded-xl border-2 border-emerald-200/30 dark:border-emerald-500/30 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
                 Wie es funktioniert
               </a>
-              <a href="#preise" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              <a href="#preise" className="px-5 py-2.5 rounded-xl border-2 border-emerald-200/30 dark:border-emerald-500/30 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
                 Preise
               </a>
-              <a href="#kontakt" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              <a href="#kontakt" className="px-5 py-2.5 rounded-xl border-2 border-emerald-200/30 dark:border-emerald-500/30 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
                 Kontakt
               </a>
               <Link
@@ -710,14 +710,14 @@ export default function HomePage() {
     </section>
 
       {/* ========== FOOTER ========== */}
-      <footer className="relative z-10 border-t border-emerald-200/30 dark:border-white/5 py-12">
+      <footer className="relative z-10 border-t border-emerald-300/50 dark:border-emerald-500/20 bg-gradient-to-b from-stone-100 to-stone-50 dark:from-stone-950 dark:to-zinc-950 py-12">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <img src="/logo.webp" alt="VoyC Logo" className="w-12 h-12 object-contain" />
-                <span className="text-xl font-bold bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
-                  VoyC
+                <span className="text-xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+                  VOYC
                 </span>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -745,9 +745,16 @@ export default function HomePage() {
 
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Kontakt</h4>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 <li className="text-sm text-gray-600 dark:text-gray-400">Eeraj</li>
-                <li><a href="mailto:info@voc-app.de" className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">info@voc-app.de</a></li>
+                <li>
+                  <a href="mailto:info@voc-app.de" className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    info@voc-app.de
+                  </a>
+                </li>
                 <li className="text-sm text-gray-600 dark:text-gray-400">Deutschland</li>
               </ul>
             </div>
