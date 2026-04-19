@@ -189,12 +189,12 @@ export default function HomePage() {
             muted
             playsInline
             className="w-full h-full object-cover"
-            style={{ filter: "brightness(0.4)" }}
+            style={{ filter: "brightness(0.2)" }}
           >
             <source src="/videos/hero-video.mp4" type="video/mp4" />
           </video>
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-emerald-900/30 via-teal-900/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent" />
         </div>
 
         {/* Content */}
