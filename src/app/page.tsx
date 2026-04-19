@@ -250,7 +250,7 @@ export default function HomePage() {
       </section>
 
     {/* ========== HOW IT WORKS ========== */}
-    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-950 via-zinc-950 to-slate-950">
+    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-950 via-zinc-950 to-stone-950">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -421,9 +421,9 @@ export default function HomePage() {
       </section>
 
       {/* ========== TESTIMONIALS SECTION ========== */}
-      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-slate-950 dark:via-zinc-950 dark:to-slate-950">
+      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16 bg-gradient-to-b from-slate-100/50 to-gray-100/50 dark:from-slate-900/50 dark:to-zinc-900/50 -mx-6 px-6 py-8 rounded-3xl">
+          <div className="text-center mb-16 bg-gradient-to-b from-stone-100/50 to-neutral-100/50 dark:from-stone-900/50 dark:to-zinc-900/50 -mx-6 px-6 py-8 rounded-3xl">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Was unsere Kunden sagen
             </h2>
@@ -587,7 +587,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== CONTACT SECTION ========== */}
-      <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-slate-950 dark:via-zinc-950 dark:to-slate-950">
+      <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
