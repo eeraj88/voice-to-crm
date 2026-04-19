@@ -320,8 +320,13 @@ export default function HomePage() {
       </section>
 
       {/* ========== FEATURES SECTION ========== */}
-      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950 dark:via-teal-950 dark:to-emerald-950">
-        <div className="container mx-auto px-6">
+      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-900/80 dark:via-teal-900/60 dark:to-emerald-900/80 overflow-hidden">
+        {/* Animated background orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="hero-orb-1 absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[150px]" />
+          <div className="hero-orb-2 absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-teal-500/10 blur-[120px]" />
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Warum VoyC?
@@ -474,8 +479,13 @@ export default function HomePage() {
       </section>
 
       {/* ========== PRICING SECTION ========== */}
-      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950 dark:via-teal-950 dark:to-emerald-950">
-        <div className="container mx-auto px-6">
+      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-900/80 dark:via-teal-900/60 dark:to-emerald-900/80 overflow-hidden">
+        {/* Animated background orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="hero-orb-3 absolute top-[-10%] left-[20%] w-[450px] h-[450px] rounded-full bg-emerald-500/10 blur-[140px]" />
+          <div className="hero-orb-1 absolute bottom-[-15%] right-[-5%] w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[160px]" />
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Transparente Preise
