@@ -79,12 +79,12 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 dark:from-zinc-950 dark:via-slate-950 dark:to-zinc-950 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50/80 via-orange-50/60 to-yellow-50/80 dark:from-zinc-950 dark:via-slate-950 dark:to-zinc-950 relative overflow-hidden">
       {/* ========== ANIMATED BACKGROUND ========== */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Primary gradient orbs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-emerald-400/20 via-teal-400/15 to-green-400/20 dark:from-emerald-600/15 dark:via-teal-600/10 dark:to-green-600/15 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tl from-teal-400/20 via-emerald-400/15 to-cyan-400/20 dark:from-teal-600/10 dark:via-emerald-600/8 dark:to-cyan-600/10 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-amber-300/20 via-orange-300/15 to-yellow-300/20 dark:from-emerald-600/15 dark:via-teal-600/10 dark:to-green-600/15 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tl from-orange-300/20 via-amber-300/15 to-yellow-400/20 dark:from-teal-600/10 dark:via-emerald-600/8 dark:to-cyan-600/10 rounded-full blur-[120px]" />
       </div>
 
       {/* ========== NAVIGATION ========== */}
@@ -250,7 +250,7 @@ export default function HomePage() {
       </section>
 
     {/* ========== HOW IT WORKS ========== */}
-    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-950 via-zinc-950 to-stone-950 overflow-hidden">
+    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-amber-50/80 via-orange-50/60 to-stone-50/80 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-1 absolute top-[-10%] left-[5%] w-[400px] h-[400px] rounded-full bg-emerald-500/8 blur-[120px]" />
@@ -325,7 +325,7 @@ export default function HomePage() {
     </section>
 
       {/* ========== FEATURES SECTION ========== */}
-      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
+      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-60/40 via-teal-50/30 to-emerald-50/40 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-1 absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/8 blur-[150px]" />
@@ -426,7 +426,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== TESTIMONIALS SECTION ========== */}
-      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
+      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-amber-50/70 via-stone-60/60 to-amber-50/70 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-3 absolute top-[10%] right-[10%] w-[380px] h-[380px] rounded-full bg-emerald-500/7 blur-[110px]" />
@@ -489,7 +489,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== PRICING SECTION ========== */}
-      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
+      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-60/40 via-teal-50/30 to-emerald-50/40 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-3 absolute top-[-10%] left-[20%] w-[450px] h-[450px] rounded-full bg-emerald-500/8 blur-[140px]" />
@@ -597,7 +597,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== CONTACT SECTION ========== */}
-      <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
+      <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-amber-50/70 via-stone-60/60 to-amber-50/70 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-2 absolute top-[15%] left-[8%] w-[350px] h-[350px] rounded-full bg-teal-500/6 blur-[115px]" />
