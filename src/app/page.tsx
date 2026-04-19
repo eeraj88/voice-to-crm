@@ -147,56 +147,74 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ========== HERO SECTION ========== */}
-      <section className="relative z-10 container mx-auto px-6 pt-20 pb-32 lg:pt-32 lg:pb-48">
-        <div className="max-w-5xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8 animate-fade-in-up">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              KI-gestützt für professionelle Ergebnisse
-            </span>
-          </div>
+      {/* ========== HERO SECTION WITH VIDEO ========== */}
+      <section className="relative z-10 min-h-screen flex items-center justify-center">
+        {/* Video Background */}
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            style={{ filter: "brightness(0.4)" }}
+          >
+            <source src="/videos/hero-video.mp4" type="video/mp4" />
+          </video>
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-emerald-900/30 via-teal-900/20 to-transparent" />
+        </div>
 
-          {/* Main Headline */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in-up animation-delay-100">
-            <span className="block bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 dark:from-emerald-400 dark:via-teal-400 dark:to-green-400 bg-clip-text text-transparent">
-              Mit deiner Stimme zum Bericht in einem Klick
-            </span>
-          </h1>
-
-          {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-10 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
-            Sprich deinen Bericht. KI extrahiert alles. Exportfertig für dein CRM.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up animation-delay-300">
-            <Link
-              href="/login"
-              className="group relative px-10 py-5 gradient-bg text-white font-bold rounded-2xl text-lg overflow-hidden transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-emerald-500/40 hover:shadow-emerald-500/60"
-            >
-              <span className="relative z-10 flex items-center gap-3">
-                Jetzt kostenlos testen
-                <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-6 py-20">
+          <div className="max-w-5xl mx-auto text-center">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8 animate-fade-in-up">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Link>
-            <a
-              href="#wie-es-funktioniert"
-              className="px-10 py-5 glass-card text-gray-700 dark:text-gray-300 font-semibold rounded-2xl text-lg hover:bg-emerald-50 dark:hover:bg-white/10 transition-all duration-300 flex items-center gap-3 border-2 border-emerald-500/20 hover:border-emerald-500/40"
-            >
-              <svg className="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              So funktioniert's
-            </a>
+              <span className="text-sm font-medium text-white">
+                KI-gestützt für professionelle Ergebnisse
+              </span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in-up animation-delay-100">
+              <span className="block text-white">
+                Mit deiner Stimme zum Bericht in einem Klick
+              </span>
+            </h1>
+
+            {/* Subheadline */}
+            <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
+              Sprich deinen Bericht. KI extrahiert alles. Exportfertig für dein CRM.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up animation-delay-300">
+              <Link
+                href="/login"
+                className="group relative px-10 py-5 gradient-bg text-white font-bold rounded-2xl text-lg overflow-hidden transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-emerald-500/40 hover:shadow-emerald-500/60"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  Jetzt kostenlos testen
+                  <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </Link>
+              <a
+                href="#wie-es-funktioniert"
+                className="px-10 py-5 glass-card text-white font-semibold rounded-2xl text-lg hover:bg-white/10 transition-all duration-300 flex items-center gap-3 border-2 border-emerald-500/20 hover:border-emerald-500/40"
+              >
+                <svg className="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                So funktioniert's
+              </a>
           </div>
 
           {/* Stats */}
