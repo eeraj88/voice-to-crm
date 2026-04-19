@@ -333,7 +333,7 @@ export default function HomePage() {
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/30 to-teal-100/20 dark:from-zinc-900/60 dark:to-stone-900/50 -mx-6 px-6 py-8 rounded-3xl border border-emerald-200/30 dark:border-emerald-900/30">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
               Warum VoyC?
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
