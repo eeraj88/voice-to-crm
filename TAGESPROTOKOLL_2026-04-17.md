@@ -562,4 +562,71 @@ remotion-video/
 
 ---
 
+---
+
+## 2026-04-20 - Feature Title Gradient Styling ✅
+
+### Aufgabe: Feature Titles im "Warum VoyC?" Bereich hervorheben
+
+**Anforderung:** Wichtige Marketing- und Technik-Wörter in den Feature-Titeln mit demselben grünen Gradient-Styling versehen wie der VOYC Header
+
+---
+
+### Durchgeführte Arbeiten
+
+**Änderung:** `src/app/page.tsx` - Feature Titles (Zeile 416)
+
+```tsx
+<h3 className="text-xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-3" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+  {feature.title}
+</h3>
+```
+
+**Hervorgehobene Wörter:**
+- Sprachaufnahme
+- Blitzschnell
+- CRM-Integration
+- Anpassbar
+- DSGVO Konform
+- Persönlicher Support
+
+---
+
+### Styling Details
+
+**Gradient:**
+- Light Mode: `from-emerald-600 to-teal-600`
+- Dark Mode: `from-emerald-400 to-teal-400`
+
+**Font:**
+- Weight: `font-black` (Maximum)
+- Family: `Inter, -apple-system, BlinkMacSystemFont, sans-serif`
+
+**Effekt:**
+- Text wird mit Gradient gefüllt (`bg-clip-text`)
+- Transparenter Text über Gradient (`text-transparent`)
+
+---
+
+### Deployment ✅
+
+**Git Commit:**
+```
+Apply gradient text styling to feature titles
+
+- Feature titles now use the same green gradient as VOYC header
+- Applied Inter font-black styling for consistency
+- Highlights marketing/technical words
+```
+
+**Commit Hash:** `6930bb8`
+**GitHub:** https://github.com/eeraj88/voice-to-crm
+
+---
+
+**Erstellt von:** Claude (Anthropic)
+**Datum:** 2026-04-20
+
+---
+
 *Ende des Protokolls* ✅
