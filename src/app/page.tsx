@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 export default function HomePage() {
   const { theme, toggleTheme } = useTheme()
@@ -10,6 +10,38 @@ export default function HomePage() {
   const [formData, setFormData] = useState({ name: '', email: '', nachricht: '' })
   const [istGesendet, setIstGesendet] = useState(false)
   const [istAmSenden, setIstAmSenden] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const heroRef = useRef<HTMLElement>(null)
+
+  // Video Intersection Observer - play when in view, pause at end
+  useEffect(() => {
+    const video = videoRef.current
+    const heroSection = heroRef.current
+
+    if (!video || !heroSection) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {})
+          } else {
+            video.pause()
+          }
+        })
+      },
+      { threshold: 0.5 }
+    )
+
+    observer.observe(heroSection)
+
+    // Remove loop - video stays at end
+    video.loop = false
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   // EmailJS Konfiguration
   const EMAILJS_SERVICE_ID = 'service_tvlk6dj'
@@ -68,8 +100,8 @@ export default function HomePage() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent tracking-tight">
-                VoyC
+              <span className="text-3xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+                VOYC
               </span>
             </Link>
 
@@ -148,13 +180,13 @@ export default function HomePage() {
       </nav>
 
       {/* ========== HERO SECTION WITH VIDEO ========== */}
-      <section className="relative z-10 min-h-screen flex items-center justify-center">
+      <section ref={heroRef} className="relative z-10 min-h-screen flex items-center justify-center">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
+            ref={videoRef}
             autoPlay
             muted
-            loop
             playsInline
             className="w-full h-full object-cover"
             style={{ filter: "brightness(0.4)" }}
@@ -215,22 +247,6 @@ export default function HomePage() {
                 </svg>
                 So funktioniert's
               </a>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-400">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-1">10x</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">schneller</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-1">95%</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Genauigkeit</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-1">DSGVO</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">konform</div>
-            </div>
           </div>
         </div>
       </div>
