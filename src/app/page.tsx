@@ -213,7 +213,7 @@ export default function HomePage() {
         <div className="relative z-10 container mx-auto px-6 py-20">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-card mb-6 animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-card mb-12 animate-fade-in-up">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
@@ -224,14 +224,14 @@ export default function HomePage() {
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight animate-fade-in-up animation-delay-100">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-12 leading-tight animate-fade-in-up animation-delay-100">
               <span className="block text-white">
                 Mit deiner Stimme zum Bericht in einem Klick
               </span>
             </h1>
 
             {/* CTA Button */}
-            <div className="animate-fade-in-up animation-delay-200">
+            <div className="animate-fade-in-up animation-delay-300 mt-8">
               <Link
                 href="/login"
                 className="inline-flex group relative px-10 py-4 gradient-bg text-white font-bold rounded-2xl text-lg overflow-hidden transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-emerald-500/40 hover:shadow-emerald-500/60"
@@ -253,8 +253,8 @@ export default function HomePage() {
     <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-950 via-zinc-950 to-stone-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-1 absolute top-[-10%] left-[5%] w-[400px] h-[400px] rounded-full bg-stone-500/6 blur-[120px]" />
-          <div className="hero-orb-2 absolute bottom-[-10%] right-[5%] w-[350px] h-[350px] rounded-full bg-zinc-500/5 blur-[100px]" />
+          <div className="hero-orb-1 absolute top-[-10%] left-[5%] w-[400px] h-[400px] rounded-full bg-emerald-500/8 blur-[120px]" />
+          <div className="hero-orb-2 absolute bottom-[-10%] right-[5%] w-[350px] h-[350px] rounded-full bg-teal-500/6 blur-[100px]" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
@@ -429,8 +429,8 @@ export default function HomePage() {
       <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-3 absolute top-[10%] right-[10%] w-[380px] h-[380px] rounded-full bg-neutral-500/5 blur-[110px]" />
-          <div className="hero-orb-1 absolute bottom-[5%] left-[15%] w-[420px] h-[420px] rounded-full bg-stone-500/6 blur-[130px]" />
+          <div className="hero-orb-3 absolute top-[10%] right-[10%] w-[380px] h-[380px] rounded-full bg-emerald-500/7 blur-[110px]" />
+          <div className="hero-orb-1 absolute bottom-[5%] left-[15%] w-[420px] h-[420px] rounded-full bg-teal-500/6 blur-[130px]" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16 bg-gradient-to-b from-stone-100/50 to-neutral-100/50 dark:from-stone-900/50 dark:to-zinc-900/50 -mx-6 px-6 py-8 rounded-3xl">
@@ -600,8 +600,8 @@ export default function HomePage() {
       <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-2 absolute top-[15%] left-[8%] w-[350px] h-[350px] rounded-full bg-zinc-500/5 blur-[115px]" />
-          <div className="hero-orb-3 absolute bottom-[10%] right-[12%] w-[400px] h-[400px] rounded-full bg-neutral-500/6 blur-[125px]" />
+          <div className="hero-orb-2 absolute top-[15%] left-[8%] w-[350px] h-[350px] rounded-full bg-teal-500/6 blur-[115px]" />
+          <div className="hero-orb-3 absolute bottom-[10%] right-[12%] w-[400px] h-[400px] rounded-full bg-emerald-500/7 blur-[125px]" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
         <div className="container mx-auto px-6">
