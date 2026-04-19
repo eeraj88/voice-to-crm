@@ -250,8 +250,13 @@ export default function HomePage() {
       </section>
 
     {/* ========== HOW IT WORKS ========== */}
-    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-950 via-zinc-950 to-stone-950">
-        <div className="container mx-auto px-6">
+    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-950 via-zinc-950 to-stone-950 overflow-hidden">
+        {/* Animated background orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="hero-orb-1 absolute top-[-10%] left-[5%] w-[400px] h-[400px] rounded-full bg-stone-500/6 blur-[120px]" />
+          <div className="hero-orb-2 absolute bottom-[-10%] right-[5%] w-[350px] h-[350px] rounded-full bg-zinc-500/5 blur-[100px]" />
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               So einfach funktioniert's
@@ -317,7 +322,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* ========== FEATURES SECTION ========== */}
       <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
@@ -421,8 +427,13 @@ export default function HomePage() {
       </section>
 
       {/* ========== TESTIMONIALS SECTION ========== */}
-      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950">
-        <div className="container mx-auto px-6">
+      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
+        {/* Animated background orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="hero-orb-3 absolute top-[10%] right-[10%] w-[380px] h-[380px] rounded-full bg-neutral-500/5 blur-[110px]" />
+          <div className="hero-orb-1 absolute bottom-[5%] left-[15%] w-[420px] h-[420px] rounded-full bg-stone-500/6 blur-[130px]" />
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16 bg-gradient-to-b from-stone-100/50 to-neutral-100/50 dark:from-stone-900/50 dark:to-zinc-900/50 -mx-6 px-6 py-8 rounded-3xl">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Was unsere Kunden sagen
@@ -476,10 +487,11 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* ========== PRICING SECTION ========== */}
-      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-gray-50 to-slate-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
+      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hero-orb-3 absolute top-[-10%] left-[20%] w-[450px] h-[450px] rounded-full bg-emerald-500/8 blur-[140px]" />
@@ -584,10 +596,17 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* ========== CONTACT SECTION ========== */}
-      <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950">
+      <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-stone-50 via-neutral-50 to-stone-50 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
+        {/* Animated background orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="hero-orb-2 absolute top-[15%] left-[8%] w-[350px] h-[350px] rounded-full bg-zinc-500/5 blur-[115px]" />
+          <div className="hero-orb-3 absolute bottom-[10%] right-[12%] w-[400px] h-[400px] rounded-full bg-neutral-500/6 blur-[125px]" />
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
@@ -690,7 +709,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* ========== FOOTER ========== */}
       <footer className="relative z-10 border-t border-emerald-200/30 dark:border-white/5 py-12">
