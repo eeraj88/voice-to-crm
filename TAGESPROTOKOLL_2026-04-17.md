@@ -435,4 +435,131 @@ Environment Variables in Vercel Dashboard hinzugefügt:
 
 ---
 
+---
+
+## 2026-04-19 - Remotion Hero Video Integration ✅
+
+### Aufgabe: Hero Video für VoyC Website erstellen
+
+**Anforderung:** Professionelles Hero-Video mit VoyC Branding für die Landing Page
+
+**Lösung:** Remotion Video-Projekt mit VoyC Text Animation
+
+---
+
+### Erstellung des Videos
+
+**Technologie:** Remotion 4.0 mit React Components
+
+**Video Spezifikationen:**
+- Dauer: 6 Sekunden (180 frames @ 30fps)
+- Auflösung: 1920x1080 (Full HD)
+- Dateigröße: 726 KB (exportiert als MP4)
+- Datei: `public/videos/hero-video.mp4`
+
+**Animation:**
+- VoyC Text zoomt von 6x auf 1x (Spring Animation)
+- Smooth easing mit damping: 150, stiffness: 40, mass: 3
+- Letter spacing animiert von 80px zu -3px
+- Fade-in von opacity 0 zu 1 (frames 0-20)
+- Gradient: Weiß zu Emerald (#10b981)
+
+**Code:** `remotion-video/src/VoyCHero.tsx`
+```tsx
+const zoomProgress = spring({
+  frame,
+  fps: 30,
+  config: { damping: 150, stiffness: 40, mass: 3 },
+});
+
+const scale = interpolate(zoomProgress, [0, 1], [6, 1]);
+const opacity = interpolate(frame, [0, 20], [0, 1]);
+const letterSpacing = interpolate(zoomProgress, [0, 1], [80, -3]);
+```
+
+---
+
+### Integration in die Website
+
+**Hero Section Änderungen:** `src/app/page.tsx`
+
+```tsx
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="w-full h-full object-cover"
+  style={{ filter: "brightness(0.4)" }}
+>
+  <source src="/videos/hero-video.mp4" type="video/mp4" />
+</video>
+<div className="absolute inset-0 bg-gradient-to-b from-emerald-900/30 via-teal-900/20 to-transparent" />
+```
+
+**Text Anpassungen:**
+- Alle Hero-Texte in Weiß geändert (für Lesbarkeit auf dunklem Video)
+- Brightness Filter (0.4) für dunklen Video-Hintergrund
+- Gradient Overlay für additional depth
+
+---
+
+### User Feedback & Iterationen
+
+1. "da ist ein rahmen auf dem text" → Rahmen/Effekte entfernt
+2. "Vllt größer die schrift?" → Font size auf 220px gesetzt
+3. "schrift einen coolen effekt geben" → Glassmorph effekt versucht, dann doch minimal
+4. "zoom soll nicht an geschwindigkeit zunehmen" → Spring config angepasst
+5. "jetzt nutze es für die voyc webseite" → Integration abgeschlossen
+
+---
+
+### Deployment ✅
+
+**Git Commit:**
+```
+Add hero video integration with Remotion animation
+
+- Created Remotion project with VoyC text animation
+- Video: 6-second spring zoom animation with white-to-emerald gradient
+- Integrated video as hero background with dark overlay
+- Added gradient overlay for text visibility
+- White text for contrast against video background
+- Added remotion-video/node_modules to .gitignore
+```
+
+**Files Changed:** 13 files, +3185 insertions, -48 deletions
+**GitHub:** https://github.com/eeraj88/voice-to-crm
+**Live:** Wird von Vercel automatisch deployed
+
+---
+
+### Remotion Projekt Struktur
+
+```
+remotion-video/
+├── src/
+│   ├── VoyCHero.tsx     # Hauptkomponente mit Animation
+│   ├── Root.tsx         # Composition definition
+│   └── index.tsx        # Entry point
+├── public/
+│   └── logo.webp        # VoyC Logo
+├── package.json         # Remotion dependencies
+├── tsconfig.json        # TypeScript config
+└── remotion.config.ts   # Remotion config
+```
+
+**Dependencies:**
+- `remotion@4.0.448`
+- `@remotion/cli@4.0.448`
+- `react@^18.3.1`
+- `remotion@4.0.448`
+
+---
+
+**Erstellt von:** Claude (Anthropic)
+**Datum:** 2026-04-19
+
+---
+
 *Ende des Protokolls* ✅
