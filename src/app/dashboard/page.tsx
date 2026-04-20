@@ -79,26 +79,29 @@ export default function DashboardPage() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-xl font-semibold bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent tracking-tight">
-                VoyC
+              <span
+                className="text-3xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent tracking-tight"
+                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}
+              >
+                VOYC
               </span>
             </Link>
 
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowHistory(!showHistory)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl transition-all"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl transition-all border border-transparent hover:border-emerald-200 dark:hover:border-emerald-700"
               >
                 {showHistory ? 'Aufnahme' : 'Historie'}
               </button>
-              <span className="text-sm text-gray-600 dark:text-gray-400 hidden sm:block">
+              <span className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hidden sm:block border border-gray-200 dark:border-white/10 rounded-xl">
                 {user.email}
               </span>
 
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2.5 rounded-xl glass-card hover:bg-emerald-50 dark:hover:bg-white/10 transition-all duration-300"
+                className="p-2.5 rounded-xl glass-card hover:bg-emerald-50 dark:hover:bg-white/10 transition-all duration-300 border border-emerald-200/50 dark:border-white/10"
                 aria-label="Toggle theme"
               >
                 {theme === 'light' ? (
@@ -114,7 +117,7 @@ export default function DashboardPage() {
 
               <button
                 onClick={signOut}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl transition-all"
+                className="px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all border border-red-200 dark:border-red-800 hover:border-red-300 dark:hover:border-red-700"
               >
                 Abmelden
               </button>
@@ -130,7 +133,10 @@ export default function DashboardPage() {
             <>
               {/* Welcome Section */}
               <div className="text-center mb-12">
-                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
+                <h1
+                  className="text-4xl md:text-5xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-4 tracking-tight"
+                  style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                >
                   Willkommen zurück
                 </h1>
                 <p className="text-lg text-gray-600 dark:text-gray-400">
@@ -141,7 +147,10 @@ export default function DashboardPage() {
               {/* Audio Recorder */}
               <div className="glass-card rounded-3xl p-6 sm:p-8 mb-8">
                 <div className="text-center mb-8">
-                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
+                  <h2
+                    className="text-2xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-3"
+                    style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                  >
                     Sprachnachricht aufnehmen
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400">
@@ -154,7 +163,10 @@ export default function DashboardPage() {
 
               {/* Tips */}
               <div className="glass rounded-2xl p-6 border border-emerald-200/50 dark:border-emerald-900/30">
-                <h3 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-4">
+                <h3
+                  className="font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-4"
+                  style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                >
                   Tipps für gute Aufnahmen
                 </h3>
                 <ul className="text-sm text-gray-700 dark:text-gray-400 space-y-2">
@@ -170,7 +182,10 @@ export default function DashboardPage() {
               {/* History Section */}
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                  <h2
+                    className="text-2xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
+                    style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                  >
                     Deine Berichte ({reports.length})
                   </h2>
                   <ExportButton reports={reports} />
