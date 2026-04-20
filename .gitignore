@@ -37,6 +37,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# remotion video (local only)
+remotion-video
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
