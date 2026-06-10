@@ -1,17 +1,12 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
+import "./voyc-design.css"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { ThemeProvider } from "@/contexts/ThemeContext"
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-})
-
 export const metadata: Metadata = {
-  title: "VoyC - Enterprise Voice CRM",
-  description: "Premium AI-powered voice-to-CRM platform for field sales professionals",
+  title: "VOYC — Mit deiner Stimme zum Bericht",
+  description: "KI-gestützter Voice-to-CRM für Außendienst-Teams. Sprachnotizen werden automatisch in strukturierte Berichte umgewandelt.",
   keywords: ["voice CRM", "sales automation", "AI transcription", "field sales"],
 }
 
@@ -21,8 +16,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="de" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans`}>
+    <html lang="de" data-theme="dark" suppressHydrationWarning>
+      <body>
+        <div className="voyc-ambient"><div className="grain" /></div>
         <ThemeProvider>
           <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>

@@ -45,3 +45,14 @@ remotion-video
 next-env.d.ts
 
 .vercel
+
+# Binary design exports (local only)
+design-export.bin
+design-export.raw
+
+# Claude Code local settings
+.claude/
+
+# Design reference material (not served by the app)
+voyc-voice-crm-design/
+public/voyc-design/

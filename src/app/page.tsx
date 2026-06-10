@@ -1,785 +1,590 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useTheme } from '@/contexts/ThemeContext'
-import { useState, useRef, useEffect } from 'react'
+
+function ThemeToggle() {
+  const { toggleTheme } = useTheme()
+  return (
+    <button className="icon-btn" onClick={toggleTheme} title="Theme wechseln" aria-label="Theme wechseln">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+      </svg>
+    </button>
+  )
+}
+
+const WAVE_COUNT = 14
 
 export default function HomePage() {
-  const { theme, toggleTheme } = useTheme()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [formData, setFormData] = useState({ name: '', email: '', nachricht: '' })
-  const [istGesendet, setIstGesendet] = useState(false)
-  const [istAmSenden, setIstAmSenden] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const heroRef = useRef<HTMLElement>(null)
-
-  // Video Intersection Observer - play when in view, pause at end
+  // Nav scroll
   useEffect(() => {
-    const video = videoRef.current
-    const heroSection = heroRef.current
+    const nav = document.getElementById('main-nav')
+    if (!nav) return
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-    if (!video || !heroSection) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            video.play().catch(() => {})
-          } else {
-            video.pause()
-          }
-        })
-      },
-      { threshold: 0.5 }
-    )
-
-    observer.observe(heroSection)
-
-    // Remove loop - video stays at end
-    video.loop = false
-
+  // Scroll reveals
+  useEffect(() => {
+    const check = () => {
+      const wh = window.innerHeight
+      document.querySelectorAll<HTMLElement>('.reveal').forEach(el => {
+        if (el.getBoundingClientRect().top < wh * 0.9) el.classList.add('in')
+      })
+    }
+    check()
+    window.addEventListener('scroll', check, { passive: true })
+    window.addEventListener('resize', check, { passive: true })
     return () => {
-      observer.disconnect()
+      window.removeEventListener('scroll', check)
+      window.removeEventListener('resize', check)
     }
   }, [])
 
-  // EmailJS Konfiguration
-  const EMAILJS_SERVICE_ID = 'service_tvlk6dj'
-  const EMAILJS_TEMPLATE_ID = 'template_ygcl039'
-  const EMAILJS_PUBLIC_KEY = 'Mk2_ZRMHb-UvIL-5M'
+  // Stat counter animations
+  useEffect(() => {
+    const defs = [
+      { id: 'stat-0', count: 2, suffix: '' },
+      { id: 'stat-1', count: 4, suffix: 's' },
+      { id: 'stat-2', count: 98, suffix: '%' },
+      { id: 'stat-3', count: 500, suffix: '+' },
+    ]
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return
+        const def = defs.find(d => d.id === entry.target.id)
+        if (!def) return
+        observer.unobserve(entry.target)
+        const el = entry.target as HTMLElement
+        const start = performance.now()
+        const duration = 1800
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / duration)
+          const ease = 1 - Math.pow(1 - t, 3)
+          el.textContent = Math.round(ease * def.count) + def.suffix
+          if (t < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+      })
+    }, { threshold: 0.5 })
+    defs.forEach(d => {
+      const el = document.getElementById(d.id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
+  }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIstAmSenden(true)
+  // Hero demo loop
+  useEffect(() => {
+    let cancelled = false
+    let waveInterval: ReturnType<typeof setInterval> | null = null
 
-    try {
-      const emailjs = (await import('@emailjs/browser')).default
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        message: formData.nachricht,
-        to_name: 'VoyC Team',
+    const sleep = (ms: number) => new Promise<void>(res => setTimeout(res, ms))
+
+    const typeText = async (el: HTMLElement, text: string) => {
+      el.textContent = ''
+      el.classList.add('typing')
+      for (const char of text) {
+        if (cancelled) return
+        el.textContent += char
+        await sleep(32)
       }
-
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        templateParams,
-        EMAILJS_PUBLIC_KEY
-      )
-
-      setIstGesendet(true)
-      setFormData({ name: '', email: '', nachricht: '' })
-    } catch (error) {
-      console.error('EmailJS Error:', error)
-      alert('Fehler beim Senden. Bitte versuche es später erneut.')
-    } finally {
-      setIstAmSenden(false)
+      el.classList.remove('typing')
     }
-  }
+
+    const showScreen = (idx: number) => {
+      const screens = document.querySelectorAll<HTMLElement>('.demo-screen')
+      const dots = document.querySelectorAll<HTMLElement>('#demo-dots i')
+      const titles = ['VOYC · Aufnahme', 'VOYC · Bericht', 'VOYC · Export']
+      screens.forEach((s, i) => {
+        s.classList.remove('active', 'exit')
+        if (i === idx) s.classList.add('active')
+        else if (i < idx) s.classList.add('exit')
+      })
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx))
+      const titleEl = document.getElementById('demo-title')
+      if (titleEl) titleEl.textContent = titles[idx] ?? ''
+    }
+
+    const animateWave = () => {
+      const bars = document.querySelectorAll<HTMLElement>('#demo-wave i')
+      bars.forEach(b => {
+        b.style.height = (18 + Math.random() * 62) + '%'
+      })
+    }
+
+    const loop = async () => {
+      await sleep(300)
+      while (!cancelled) {
+        // Stage 1: Record
+        showScreen(0)
+        waveInterval = setInterval(animateWave, 100)
+        const timerEl = document.getElementById('demo-timer')
+        for (let i = 0; i <= 3 && !cancelled; i++) {
+          if (timerEl) timerEl.textContent = `00:0${i}`
+          await sleep(800)
+        }
+        if (waveInterval) clearInterval(waveInterval)
+        const bars = document.querySelectorAll<HTMLElement>('#demo-wave i')
+        bars.forEach(b => { b.style.height = '25%' })
+        if (cancelled) return
+        await sleep(300)
+
+        // Stage 2: Report
+        showScreen(1)
+        const fields = document.querySelectorAll<HTMLElement>('.demo-screen[data-screen="report"] .d-val')
+        for (const field of Array.from(fields)) {
+          if (cancelled) return
+          await typeText(field, field.getAttribute('data-tw') ?? '')
+          await sleep(100)
+        }
+        if (cancelled) return
+        await sleep(700)
+
+        // Stage 3: Export
+        showScreen(2)
+        const expBtn = document.getElementById('exp-btn')
+        const expDone = document.getElementById('exp-done')
+        const cursor = document.getElementById('demo-cursor') as HTMLElement | null
+        if (expBtn) { expBtn.classList.remove('clicked', 'gone') }
+        if (expDone) { expDone.classList.remove('show') }
+        await sleep(500)
+        if (cancelled) return
+
+        if (cursor) {
+          cursor.style.opacity = '1'
+          cursor.style.left = '70%'
+          cursor.style.top = '65%'
+          await sleep(800)
+          if (cancelled) return
+          cursor.style.left = '50%'
+          cursor.style.top = '50%'
+          await sleep(700)
+          if (cancelled) return
+          cursor.classList.add('press')
+          if (expBtn) expBtn.classList.add('clicked')
+          await sleep(180)
+          if (cancelled) return
+          cursor.classList.remove('press')
+          if (expBtn) expBtn.classList.add('gone')
+          if (expDone) expDone.classList.add('show')
+          cursor.style.opacity = '0'
+          await sleep(2000)
+          if (cancelled) return
+        } else {
+          await sleep(3000)
+        }
+
+        showScreen(0)
+        const t = document.getElementById('demo-timer')
+        if (t) t.textContent = '00:00'
+        await sleep(500)
+      }
+    }
+
+    loop()
+    return () => {
+      cancelled = true
+      if (waveInterval) clearInterval(waveInterval)
+    }
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/80 via-orange-50/60 to-yellow-50/80 dark:from-zinc-950 dark:via-slate-950 dark:to-zinc-950 relative overflow-hidden">
-      {/* ========== ANIMATED BACKGROUND ========== */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Primary gradient orbs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-amber-300/20 via-orange-300/15 to-yellow-300/20 dark:from-emerald-600/15 dark:via-teal-600/10 dark:to-green-600/15 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tl from-orange-300/20 via-amber-300/15 to-yellow-400/20 dark:from-teal-600/10 dark:via-emerald-600/8 dark:to-cyan-600/10 rounded-full blur-[120px]" />
-      </div>
-
-      {/* ========== NAVIGATION ========== */}
-      <nav className="relative z-50 sticky top-0 backdrop-blur-xl bg-white/70 dark:bg-zinc-950/70 border-b border-emerald-200/30 dark:border-white/5">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-20 h-20 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300">
-                <img
-                  src="/logo.webp"
-                  alt="VoyC Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span className="text-3xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
-                VOYC
-              </span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-4">
-              <a href="#features" className="px-5 py-2.5 rounded-xl border-2 border-emerald-200/30 dark:border-emerald-500/30 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
-                Features
-              </a>
-              <a href="#wie-es-funktioniert" className="px-5 py-2.5 rounded-xl border-2 border-emerald-200/30 dark:border-emerald-500/30 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
-                Wie es funktioniert
-              </a>
-              <a href="#preise" className="px-5 py-2.5 rounded-xl border-2 border-emerald-200/30 dark:border-emerald-500/30 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
-                Preise
-              </a>
-              <a href="#kontakt" className="px-5 py-2.5 rounded-xl border-2 border-emerald-200/30 dark:border-emerald-500/30 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
-                Kontakt
-              </a>
-              <Link
-                href="/login"
-                className="px-6 py-2.5 gradient-bg text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 transform hover:scale-105"
-              >
-                Starten
-              </Link>
-
-              {/* Theme Toggle */}
-              <button
-                onClick={toggleTheme}
-                className="p-2.5 rounded-xl glass-card hover:bg-emerald-50 dark:hover:bg-white/10 transition-all duration-300"
-                aria-label="Toggle theme"
-              >
-                {theme === 'light' ? (
-                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                  </svg>
-                ) : (
-                  <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                )}
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl glass-card"
-              aria-label="Toggle menu"
-            >
-              <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden mt-4 pb-4 space-y-3 animate-fade-in">
-              <a href="#features" className="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl hover:bg-emerald-50 dark:hover:bg-white/5 transition-all">
-                Features
-              </a>
-              <a href="#wie-es-funktioniert" className="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl hover:bg-emerald-50 dark:hover:bg-white/5 transition-all">
-                Wie es funktioniert
-              </a>
-              <a href="#preise" className="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl hover:bg-emerald-50 dark:hover:bg-white/5 transition-all">
-                Preise
-              </a>
-              <a href="#kontakt" className="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl hover:bg-emerald-50 dark:hover:bg-white/5 transition-all">
-                Kontakt
-              </a>
-              <Link href="/login" className="block px-4 py-3 gradient-bg text-white text-sm font-semibold rounded-xl text-center">
-                Starten
-              </Link>
-            </div>
-          )}
-        </div>
-      </nav>
-
-      {/* ========== HERO SECTION WITH VIDEO ========== */}
-      <section ref={heroRef} className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background Orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Large top-left orb */}
-          <div className="hero-orb-1 absolute top-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-emerald-950/40 via-teal-950/30 to-emerald-900/20 blur-[120px]" />
-          {/* Medium bottom-right orb */}
-          <div className="hero-orb-2 absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tl from-teal-950/40 via-emerald-950/30 to-teal-900/20 blur-[100px]" />
-          {/* Small center-right orb with pulse */}
-          <div className="hero-orb-3 hero-orb-pulse absolute top-[30%] right-[10%] w-[300px] h-[300px] rounded-full bg-gradient-to-br from-emerald-900/30 via-teal-900/20 to-emerald-950/10 blur-[80px]" />
-          {/* Extra dark contrast orb */}
-          <div className="hero-orb-1 absolute bottom-[20%] left-[15%] w-[400px] h-[400px] rounded-full bg-black/30 blur-[150px] hero-orb-pulse" style={{ animationDelay: '2s' }} />
-        </div>
-
-        {/* Video Background */}
-        <div className="absolute inset-0 w-full h-full">
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-            style={{ filter: "brightness(0.25)" }}
-          >
-            <source src="/videos/hero-video.mp4" type="video/mp4" />
-          </video>
-          {/* Gradient Overlay - lighter for light mode */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white/60 dark:from-black/10 dark:via-transparent dark:to-black/40" />
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 container mx-auto px-6 py-20">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-card mb-12 animate-fade-in-up">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-              </span>
-              <span className="text-xs font-medium text-white/90">
-                KI-gestützt
-              </span>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-12 leading-tight animate-fade-in-up animation-delay-100">
-              <span className="block text-white">
-                Mit deiner Stimme zum Bericht in einem Klick
-              </span>
-            </h1>
-
-            {/* CTA Button */}
-            <div className="animate-fade-in-up animation-delay-300 mt-8">
-              <Link
-                href="/login"
-                className="inline-flex group relative px-10 py-4 gradient-bg text-white font-bold rounded-2xl text-lg overflow-hidden transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-emerald-500/40 hover:shadow-emerald-500/60"
-              >
-                <span className="relative z-10 flex items-center gap-3">
-                  Jetzt kostenlos testen
-                  <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </Link>
-            </div>
+    <div className="voyc-root">
+      {/* NAV */}
+      <header className="nav" id="main-nav">
+        <div className="nav-inner">
+          <Link href="/" className="brand">
+            <Image src="/assets/voyc-logo.png" alt="VOYC" width={34} height={34} />
+            <span className="word">VOYC</span>
+          </Link>
+          <nav className="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how">Wie es funktioniert</a>
+            <a href="#pricing">Preise</a>
+            <a href="#contact">Kontakt</a>
+          </nav>
+          <div className="nav-actions">
+            <Link href="/login" className="ghost-link" style={{ padding: '9px 12px' }}>Anmelden</Link>
+            <Link href="/login" className="btn btn-primary">Starten <span className="arrow">→</span></Link>
+            <ThemeToggle />
           </div>
         </div>
-      </section>
+      </header>
 
-    {/* ========== HOW IT WORKS ========== */}
-    <section id="wie-es-funktioniert" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-amber-50/80 via-orange-50/60 to-stone-50/80 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
-        {/* Animated background orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-1 absolute top-[-10%] left-[5%] w-[400px] h-[400px] rounded-full bg-emerald-500/8 blur-[120px]" />
-          <div className="hero-orb-2 absolute bottom-[-10%] right-[5%] w-[350px] h-[350px] rounded-full bg-teal-500/6 blur-[100px]" />
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              So einfach funktioniert's
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              In 3 einfachen Schritten von deinem Kundenbesuch zum strukturierten Bericht
-            </p>
-          </div>
+      <span id="top" />
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Step 1 */}
-            <div className="relative group">
-              <div className="absolute -top-4 -left-4 w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                1
-              </div>
-              <div className="glass-card rounded-2xl p-8 pt-12 h-full transform group-hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/20">
-                <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Sprich auf</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Nach dem Kundenbesuch sprichst du deine Notizen einfach in die App. Kein Tippen mehr.
-                </p>
-              </div>
-            </div>
+      {/* ── HERO ────────────────────────────────────────────── */}
+      <section className="hero">
+        <div className="v-container">
+          <div className="hero-split">
 
-            {/* Step 2 */}
-            <div className="relative group">
-              <div className="absolute -top-4 -left-4 w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                2
-              </div>
-              <div className="glass-card rounded-2xl p-8 pt-12 h-full transform group-hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/20">
-                <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">AI analysiert</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Unsere KI extrahiert automatisch alle relevanten Daten: Produkte, Mengen, Termine, Aufgaben.
-                </p>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="relative group">
-              <div className="absolute -top-4 -left-4 w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                3
-              </div>
-              <div className="glass-card rounded-2xl p-8 pt-12 h-full transform group-hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/20">
-                <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Exportieren</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Ein Klick genügt und deine Daten sind in Google Sheets, Excel oder deinem ERP-System.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-    </section>
-
-      {/* ========== FEATURES SECTION ========== */}
-      <section id="features" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-60/40 via-teal-50/30 to-emerald-50/40 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
-        {/* Animated background orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-1 absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/8 blur-[150px]" />
-          <div className="hero-orb-2 absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-teal-500/6 blur-[120px]" />
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/30 to-teal-100/20 dark:from-zinc-900/60 dark:to-stone-900/50 -mx-6 px-6 py-8 rounded-3xl border border-emerald-200/30 dark:border-emerald-900/30">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Warum VoyC?
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Funktionen, die deine Kundengespräche revolutionieren
-            </p>
-          </div>
-
-          {/* Simple Grid Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {[
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
-                ),
-                gradient: 'from-emerald-500 to-teal-500',
-                title: 'Sprachaufnahme',
-                description: 'Einfach nach dem Gespräch sprechen. Kein Tippen mehr.'
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                ),
-                gradient: 'from-blue-500 to-purple-500',
-                title: 'Blitzschnell',
-                description: 'Echtzeit-Transkription während du sprichst. Sofortige Ergebnisse.'
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                ),
-                gradient: 'from-purple-500 to-pink-500',
-                title: 'CRM-Integration',
-                description: 'Export zu Google Sheets, Excel, Salesforce, HubSpot und mehr.'
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                ),
-                gradient: 'from-amber-500 to-orange-500',
-                title: 'Anpassbar',
-                description: 'Definiere selbst, was extrahiert wird. Flexibel für jede Branche.'
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                ),
-                gradient: 'from-green-500 to-emerald-500',
-                title: 'DSGVO Konform',
-                description: 'Server in Frankfurt. Höchste Sicherheitsstandards und volle Datenhoheit.'
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                ),
-                gradient: 'from-red-500 to-rose-500',
-                title: 'Persönlicher Support',
-                description: 'Dedizierter Berater für Onboarding und kontinuierliche Optimierung.'
-              }
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="group relative glass-card rounded-2xl p-8 hover:bg-white/90 dark:hover:bg-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-1"
-              >
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center shadow-lg mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-3" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========== TESTIMONIALS SECTION ========== */}
-      <section className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-amber-50/70 via-stone-60/60 to-amber-50/70 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
-        {/* Animated background orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-3 absolute top-[10%] right-[10%] w-[380px] h-[380px] rounded-full bg-emerald-500/7 blur-[110px]" />
-          <div className="hero-orb-1 absolute bottom-[5%] left-[15%] w-[420px] h-[420px] rounded-full bg-teal-500/6 blur-[130px]" />
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16 bg-gradient-to-b from-stone-100/50 to-neutral-100/50 dark:from-stone-900/50 dark:to-zinc-900/50 -mx-6 px-6 py-8 rounded-3xl">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Was unsere Kunden sagen
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Erfahre, wie VoyC das Arbeitsleben von Vertriebsprofis revolutioniert
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                quote: 'VoyC hat mir mindestens 2 Stunden pro Tag gespart. Ich kann mich jetzt auf das Verkaufsgespräch konzentrieren, nicht auf die Dokumentation.',
-                name: 'Michael Schneider',
-                role: 'Außendienst / Pharma',
-                company: 'Bayer Vital'
-              },
-              {
-                quote: 'Endlich keine Notizen mehr im Auto verloren! Die KI erkennt sogar Produktnamen und Mengen korrekt. Absolut beeindruckend.',
-                name: 'Sarah Wagner',
-                role: 'Key Account Manager',
-                company: 'Beiersdorf AG'
-              },
-              {
-                quote: 'Die Integration in unser Salesforce war kinderleicht. Unser whole Team nutzt VoyC jetzt täglich. Die Produktivität ist messbar gestiegen.',
-                name: 'Thomas Klein',
-                role: 'Sales Director DACH',
-                company: 'SAP'
-              }
-            ].map((testimonial, index) => (
-              <div
-                key={index}
-                className="glass-card rounded-2xl p-8 hover:bg-white/90 dark:hover:bg-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/20"
-              >
-                <div className="flex gap-1 mb-6">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-                  "{testimonial.quote}"
-                </p>
-                <div>
-                  <div className="font-semibold text-gray-900 dark:text-white">{testimonial.name}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{testimonial.role}</div>
-                  <div className="text-xs text-emerald-600 dark:text-emerald-400">{testimonial.company}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========== PRICING SECTION ========== */}
-      <section id="preise" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-emerald-60/40 via-teal-50/30 to-emerald-50/40 dark:from-zinc-950 dark:via-stone-950 dark:to-zinc-950 overflow-hidden">
-        {/* Animated background orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-3 absolute top-[-10%] left-[20%] w-[450px] h-[450px] rounded-full bg-emerald-500/8 blur-[140px]" />
-          <div className="hero-orb-1 absolute bottom-[-15%] right-[-5%] w-[500px] h-[500px] rounded-full bg-teal-500/6 blur-[160px]" />
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16 bg-gradient-to-b from-emerald-100/30 to-teal-100/20 dark:from-zinc-900/60 dark:to-stone-900/50 -mx-6 px-6 py-8 rounded-3xl border border-emerald-200/30 dark:border-emerald-900/30">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Transparente Preise
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Wähle den Plan, der zu dir passt. Jederzeit flexibel anpassbar.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Free Plan */}
-            <div className="glass-card rounded-2xl p-8 transform hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/10">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Starter</h3>
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Kostenlos</div>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">Perfect zum Kennenlernen</p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  20 Berichte pro Monat
-                </li>
-                <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Standard AI-Extraktion
-                </li>
-                <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Google Sheets Export
-                </li>
-                <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Community Support
-                </li>
-              </ul>
-              <Link href="/login" className="block w-full py-3 text-center font-semibold rounded-xl border-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all">
-                Kostenlos testen
-              </Link>
-            </div>
-
-            {/* Pro Plan */}
-            <div className="relative gradient-bg rounded-2xl p-8 transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-emerald-500/30">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-white text-emerald-600 text-sm font-bold rounded-full">
-                Empfohlen
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Professional</h3>
-              <div className="text-4xl font-bold text-white mb-4">€79<span className="text-lg font-normal">/Monat</span></div>
-              <p className="text-emerald-100 mb-6">Für professionelle Teams</p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2 text-white">
-                  <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Unbegrenzte Berichte
-                </li>
-                <li className="flex items-start gap-2 text-white">
-                  <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Anpassbare Felder & Exporte
-                </li>
-                <li className="flex items-start gap-2 text-white">
-                  <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Excel + CRM Integration
-                </li>
-                <li className="flex items-start gap-2 text-white">
-                  <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Persönlicher Berater
-                </li>
-              </ul>
-              <Link href="/login" className="block w-full py-3 text-center font-bold rounded-xl bg-white text-emerald-600 hover:bg-emerald-50 transition-all">
-                Jetzt starten
-              </Link>
-            </div>
-
-            {/* Enterprise Plan */}
-            <div className="glass-card rounded-2xl p-8 transform hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/10">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Enterprise</h3>
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Individuell</div>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">Für große Organisationen</p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Alles aus Professional
-                </li>
-                <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Self-Hosted Option
-                </li>
-                <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Custom AI Training
-                </li>
-                <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  Dedicated Success Manager
-                </li>
-              </ul>
-              <a href="#kontakt" className="block w-full py-3 text-center font-semibold rounded-xl border-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all">
-                Anfragen
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========== CONTACT SECTION ========== */}
-      <section id="kontakt" className="relative z-10 py-24 lg:py-32 bg-gradient-to-b from-amber-50/70 via-stone-60/60 to-amber-50/70 dark:from-stone-950 dark:via-zinc-950 dark:to-stone-950 overflow-hidden">
-        {/* Animated background orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-orb-2 absolute top-[15%] left-[8%] w-[350px] h-[350px] rounded-full bg-teal-500/6 blur-[115px]" />
-          <div className="hero-orb-3 absolute bottom-[10%] right-[12%] w-[400px] h-[400px] rounded-full bg-emerald-500/7 blur-[125px]" />
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                Sprich mit uns
-              </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-400">
-                Du hast Fragen? Wir freuen uns auf deine Nachricht.
+            {/* LEFT: Text */}
+            <div className="hero-text">
+              <span className="badge reveal"><span className="dot" /> KI-gestützter Voice-to-CRM</span>
+              <h1 className="reveal" data-d="1">
+                Mit deiner Stimme zum{' '}
+                <span className="grad">fertigen Bericht</span>
+                {' '}— in einem Klick.
+              </h1>
+              <p className="sub reveal" data-d="2">
+                Sprich nach dem Kundentermin einfach drauf los. VOYC transkribiert, strukturiert und exportiert alles automatisch in dein CRM. Kein Tippen mehr.
               </p>
+              <div className="hero-cta reveal" data-d="3">
+                <Link href="/login" className="btn btn-primary btn-lg">Jetzt kostenlos testen <span className="arrow">→</span></Link>
+                <a href="#how" className="btn btn-ghost btn-lg">So funktioniert&apos;s</a>
+              </div>
+              <div className="hero-trust reveal" data-d="4">
+                <div className="avatars"><span>MS</span><span>SW</span><span>TK</span><span>+</span></div>
+                <div><span className="stars">★★★★★</span>&nbsp;<b style={{ color: 'var(--ink)' }}>4,9/5</b> von 500+ Außendienstlern</div>
+              </div>
             </div>
 
-            <div className="glass-card rounded-2xl p-8 md:p-12">
-              {istGesendet ? (
-                <div className="text-center py-12">
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full gradient-bg flex items-center justify-center">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            {/* RIGHT: Demo */}
+            <div className="hero-demo-wrap reveal" data-d="1">
+              <div className="demo-success-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" style={{ width: 14, height: 14 }}>
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Bericht in 4 Sek.
+              </div>
+              <div className="demo" id="demo">
+                <div className="demo-frame">
+                  <div className="demo-head">
+                    <div className="tl"><i /><i /><i /></div>
+                    <div className="ttl" id="demo-title">VOYC · Aufnahme</div>
+                  </div>
+                  <div className="demo-stage">
+                    {/* Screen 1: Record */}
+                    <div className="demo-screen active" data-screen="record">
+                      <div className="rec-orb">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                          <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" />
+                        </svg>
+                      </div>
+                      <div className="demo-wave" id="demo-wave">
+                        {Array.from({ length: WAVE_COUNT }, (_, i) => (
+                          <i key={i} style={{ height: '25%' }} />
+                        ))}
+                      </div>
+                      <div className="demo-cap"><span className="rec-dot" /> Aufnahme läuft …</div>
+                      <div className="demo-timer" id="demo-timer">00:00</div>
+                    </div>
+                    {/* Screen 2: Report */}
+                    <div className="demo-screen" data-screen="report">
+                      <div className="d-field"><span className="d-lbl">Firmenname</span><span className="d-val" data-tw="Pestalozzi GmbH" /></div>
+                      <div className="d-field"><span className="d-lbl">Kontaktperson</span><span className="d-val" data-tw="Herr Keller" /></div>
+                      <div className="d-field"><span className="d-lbl">Zusammenfassung</span><span className="d-val" data-tw="Sehr zufrieden – Nachbestellung gewünscht." /></div>
+                      <div className="d-grid">
+                        <div className="d-field"><span className="d-lbl">Vorgang</span><span className="d-val" data-tw="Bestellung · 500 Stk" /></div>
+                        <div className="d-field"><span className="d-lbl">Frist</span><span className="d-val" data-tw="23.04.2026" /></div>
+                      </div>
+                    </div>
+                    {/* Screen 3: Export */}
+                    <div className="demo-screen" data-screen="export">
+                      <div className="exp-inner">
+                        <button className="exp-btn" id="exp-btn">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <path d="M7 10l5 5 5-5M12 15V3" />
+                          </svg>
+                          <span>An CRM exportieren</span>
+                        </button>
+                        <div className="exp-done" id="exp-done">
+                          <span className="exp-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round"><path d="M20 6 9 17l-5-5" /></svg>
+                          </span>
+                          Erfolgreich exportiert
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Animated cursor */}
+                  <div className="demo-cursor" id="demo-cursor" style={{ opacity: 0 }}>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M5 2l14 7-6 2.5L10.5 18z" stroke="#04140f" strokeWidth="1.2" strokeLinejoin="round" />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                    Nachricht gesendet!
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Wir melden uns so schnell wie möglich bei dir.
-                  </p>
-                  <button
-                    onClick={() => setIstGesendet(false)}
-                    className="mt-6 px-6 py-2 gradient-bg text-white font-semibold rounded-xl hover:shadow-lg transition-all"
-                  >
-                    Weitere Nachricht senden
-                  </button>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                        placeholder="Dein Name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                        placeholder="deine@email.de"
-                      />
-                    </div>
-                  </div>
+                <div className="demo-dots" id="demo-dots">
+                  <i className="active" /><i /><i />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── LOGOS ──────────────────────────────────────────── */}
+      <section className="logos">
+        <div className="v-container">
+          <p className="lbl reveal">Vertraut von Vertriebsteams in der gesamten DACH-Region</p>
+        </div>
+        <div className="marquee reveal" data-d="1">
+          <div className="marquee-track">
+            {[0, 1, 2].flatMap(i => [
+              <span key={`${i}-0`} className="lg">◇ Bayer Vital</span>,
+              <span key={`${i}-1`} className="lg">◈ Beiersdorf</span>,
+              <span key={`${i}-2`} className="lg">▲ SAP</span>,
+              <span key={`${i}-3`} className="lg">● Continental</span>,
+              <span key={`${i}-4`} className="lg">✦ Henkel</span>,
+            ])}
+          </div>
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS ───────────────────────────────────── */}
+      <section className="sec sec-alt" id="how">
+        <div className="v-container">
+          <div className="sec-head reveal">
+            <span className="eyebrow">In 3 Schritten</span>
+            <h2>So einfach funktioniert&apos;s</h2>
+            <p>Von deinem Kundenbesuch zum strukturierten Bericht — ohne ein einziges Wort zu tippen.</p>
+          </div>
+          <div className="steps">
+            <div className="step reveal" data-d="1">
+              <div className="num">01</div>
+              <div className="ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" />
+                </svg>
+              </div>
+              <h3>Sprich auf</h3>
+              <p>Nach dem Termin sprichst du deine Notizen einfach in die App: „War bei Pestalozzi, brauchen 500 Stück bis Freitag."</p>
+            </div>
+            <div className="step reveal" data-d="2">
+              <div className="num">02</div>
+              <div className="ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                  <path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M5.6 18.4l2.1-2.1M12 18v3M18.4 18.4l-2.1-2.1M21 12h-3M18.4 5.6l-2.1 2.1" /><circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <h3>KI analysiert</h3>
+              <p>Unsere KI extrahiert automatisch alle relevanten Daten: Firma, Produkte, Mengen, Termine und Aufgaben.</p>
+            </div>
+            <div className="step reveal" data-d="3">
+              <div className="num">03</div>
+              <div className="ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M7 10l5 5 5-5M12 15V3" />
+                </svg>
+              </div>
+              <h3>Exportieren</h3>
+              <p>Ein Klick genügt und deine Daten landen in Google Sheets, Excel oder direkt in deinem CRM-System.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FEATURES ───────────────────────────────────────── */}
+      <section className="sec" id="features">
+        <div className="v-container">
+          <div className="sec-head reveal">
+            <span className="eyebrow">Warum VOYC</span>
+            <h2>Funktionen, die deine Kundengespräche revolutionieren</h2>
+            <p>Gebaut für den Außendienst — schnell, sicher und auf jede Branche anpassbar.</p>
+          </div>
+          <div className="feat-grid">
+            {[
+              { bg: 'linear-gradient(135deg,#10b981,#22d3ee)', title: 'Sprachaufnahme', desc: 'Einfach nach dem Gespräch reinsprechen. Kein Tippen auf dem Handy mehr — egal ob im Auto oder unterwegs.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg> },
+              { bg: 'linear-gradient(135deg,#8b5cf6,#6366f1)', title: 'Blitzschnell', desc: 'Echtzeit-Transkription mit Groq Whisper. Vom gesprochenen Wort zum fertigen Bericht in unter 5 Sekunden.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="m13 2-3 8h6l-4 12 9-14h-6l3-6z"/></svg> },
+              { bg: 'linear-gradient(135deg,#ec4899,#d946ef)', title: 'CRM-Integration', desc: 'Nahtloser Export zu Google Sheets, Excel, Salesforce, HubSpot und mehr — über Make.com Webhooks.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg> },
+              { bg: 'linear-gradient(135deg,#f59e0b,#f97316)', title: 'Anpassbar', desc: 'Definiere selbst, was extrahiert wird. Bestellungen, Angebote, Anfragen, Aufgaben — flexibel für jede Branche.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> },
+              { bg: 'linear-gradient(135deg,#10b981,#059669)', title: 'DSGVO-konform', desc: 'Server in Frankfurt, höchste Sicherheitsstandards und volle Datenhoheit. Deine Kundendaten bleiben deine.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg> },
+              { bg: 'linear-gradient(135deg,#06b6d4,#0ea5e9)', title: 'Persönlicher Support', desc: 'Dedizierter Berater für Onboarding und kontinuierliche Optimierung — damit du das Maximum rausholst.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg> },
+            ].map((f, i) => (
+              <div key={f.title} className="feat reveal" data-d={String((i % 3) + 1)}>
+                <div className="ic" style={{ background: f.bg }}>{f.icon}</div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── STATS ──────────────────────────────────────────── */}
+      <section className="sec" style={{ paddingTop: 0 }}>
+        <div className="v-container">
+          <div className="stats">
+            {[
+              { id: 'stat-0', val: '2', label: 'Std. gespart pro Tag' },
+              { id: 'stat-1', val: '4s', label: 'Sekunden pro Bericht' },
+              { id: 'stat-2', val: '98%', label: 'Erkennungsgenauigkeit' },
+              { id: 'stat-3', val: '500+', label: 'Aktive Außendienstler' },
+            ].map((s, i) => (
+              <div key={s.id} className="vstat reveal" data-d={String(i + 1)}>
+                <div className="stat-ring"><span className="snum" id={s.id}>{s.val}</span></div>
+                <div className="lbl">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ───────────────────────────────────── */}
+      <section className="sec sec-alt" id="testimonials">
+        <div className="v-container">
+          <div className="sec-head reveal">
+            <span className="eyebrow">Stimmen</span>
+            <h2>Was unsere Kunden sagen</h2>
+            <p>Erfahre, wie VOYC das Arbeitsleben von Vertriebsprofis verändert.</p>
+          </div>
+          <div className="testi-grid">
+            {[
+              { initials: 'MS', name: 'Michael Schneider', role: 'Außendienst Pharma', company: 'Bayer Vital', quote: '„VOYC hat mir mindestens 2 Stunden pro Tag gespart. Ich kann mich endlich aufs Verkaufsgespräch konzentrieren, nicht auf die Dokumentation."' },
+              { initials: 'SW', name: 'Sarah Wagner', role: 'Key Account Manager', company: 'Beiersdorf AG', quote: '„Endlich keine Notizen mehr im Auto verloren! Die KI erkennt sogar Produktnamen und Mengen korrekt. Absolut beeindruckend."' },
+              { initials: 'TK', name: 'Thomas Klein', role: 'Sales Director DACH', company: 'SAP', quote: '„Die Integration in unser Salesforce war kinderleicht. Unser ganzes Team nutzt VOYC jetzt täglich — die Produktivität ist messbar gestiegen."' },
+            ].map((t, i) => (
+              <div key={t.name} className="testi reveal" data-d={String(i + 1)}>
+                <div className="stars">★★★★★</div>
+                <blockquote>{t.quote}</blockquote>
+                <div className="who">
+                  <div className="av">{t.initials}</div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Nachricht
-                    </label>
-                    <textarea
-                      required
-                      rows={5}
-                      value={formData.nachricht}
-                      onChange={(e) => setFormData({ ...formData, nachricht: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-none"
-                      placeholder="Wie können wir dir helfen?"
-                    />
+                    <div className="nm">{t.name}</div>
+                    <div className="rl">{t.role} · <span className="co">{t.company}</span></div>
                   </div>
-                  <button
-                    type="submit"
-                    disabled={istAmSenden}
-                    className="w-full py-4 gradient-bg text-white font-bold rounded-xl hover:shadow-xl hover:shadow-emerald-500/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    {istAmSenden ? (
-                      <>
-                        <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Senden...
-                      </>
-                    ) : (
-                      <>
-                        Nachricht senden
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRICING ────────────────────────────────────────── */}
+      <section className="sec" id="pricing">
+        <div className="v-container">
+          <div className="sec-head reveal">
+            <span className="eyebrow">Preise</span>
+            <h2>Transparente Preise</h2>
+            <p>Wähle den Plan, der zu dir passt. Jederzeit flexibel anpassbar.</p>
+          </div>
+          <div className="price-grid">
+            <div className="plan reveal" data-d="1">
+              <div className="tag">Starter</div>
+              <div className="price">Kostenlos</div>
+              <div className="desc">Perfekt zum Kennenlernen.</div>
+              <ul>
+                <li><CheckIcon />20 Berichte pro Monat</li>
+                <li><CheckIcon />Standard KI-Extraktion</li>
+                <li><CheckIcon />Google Sheets Export</li>
+                <li><CheckIcon />Community Support</li>
+              </ul>
+              <Link href="/login" className="btn btn-ghost">Kostenlos testen</Link>
+            </div>
+            <div className="plan feature reveal" data-d="2">
+              <div className="ribbon">Empfohlen</div>
+              <div className="tag">Professional</div>
+              <div className="price">€79<small>/Monat</small></div>
+              <div className="desc">Für professionelle Teams.</div>
+              <ul>
+                <li><CheckIcon />Unbegrenzte Berichte</li>
+                <li><CheckIcon />Anpassbare Felder &amp; Exporte</li>
+                <li><CheckIcon />Excel + CRM-Integration</li>
+                <li><CheckIcon />Persönlicher Berater</li>
+              </ul>
+              <Link href="/login" className="btn btn-primary">Jetzt starten <span className="arrow">→</span></Link>
+            </div>
+            <div className="plan reveal" data-d="3">
+              <div className="tag">Enterprise</div>
+              <div className="price">Individuell</div>
+              <div className="desc">Für große Organisationen.</div>
+              <ul>
+                <li><CheckIcon />Alles aus Professional</li>
+                <li><CheckIcon />Self-Hosted Option</li>
+                <li><CheckIcon />Custom AI Training</li>
+                <li><CheckIcon />Dedicated Success Manager</li>
+              </ul>
+              <a href="#contact" className="btn btn-ghost">Anfragen</a>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-      {/* ========== FOOTER ========== */}
-      <footer className="relative z-10 border-t border-emerald-300/50 dark:border-emerald-500/20 bg-gradient-to-b from-stone-100 to-stone-50 dark:from-stone-950 dark:to-zinc-950 py-12">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <img src="/logo.webp" alt="VoyC Logo" className="w-12 h-12 object-contain" />
-                <span className="text-xl font-black bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
-                  VOYC
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Die Voice-to-CRM App für professionelle Kundengespräche.
-              </p>
+      {/* ── CONTACT ────────────────────────────────────────── */}
+      <section className="sec sec-alt" id="contact">
+        <div className="v-container">
+          <div className="sec-head reveal">
+            <span className="eyebrow">Kontakt</span>
+            <h2>Sprich mit uns</h2>
+            <p>Du hast Fragen? Wir freuen uns auf deine Nachricht.</p>
+          </div>
+          <form className="contact-card reveal" data-d="1" onSubmit={e => e.preventDefault()}>
+            <div className="field-row">
+              <div className="vfield"><label htmlFor="c-name">Name</label><input className="vinput" id="c-name" placeholder="Dein Name" /></div>
+              <div className="vfield"><label htmlFor="c-mail">E-Mail</label><input className="vinput" id="c-mail" type="email" placeholder="deine@email.de" /></div>
             </div>
+            <div className="vfield"><label htmlFor="c-msg">Nachricht</label><textarea className="vinput" id="c-msg" placeholder="Wie können wir dir helfen?" /></div>
+            <button className="btn btn-primary btn-block btn-lg" type="submit">Nachricht senden <span className="arrow">→</span></button>
+          </form>
+        </div>
+      </section>
 
+      {/* ── FINAL CTA ──────────────────────────────────────── */}
+      <section className="sec">
+        <div className="v-container">
+          <div className="reveal" style={{ textAlign: 'center', padding: '72px 40px', borderRadius: 'var(--r-xl)', background: 'var(--accent-grad)', color: '#04140f', position: 'relative', overflow: 'hidden', boxShadow: '0 30px 80px -30px rgba(16,185,129,0.8)' }}>
+            <h2 style={{ fontSize: 'clamp(28px,3.6vw,44px)', fontWeight: 800, letterSpacing: '-0.03em' }}>Bereit, deine Berichte zu automatisieren?</h2>
+            <p style={{ fontSize: 18, opacity: 0.78, margin: '12px 0 28px', maxWidth: '48ch', marginInline: 'auto' }}>Starte kostenlos und erlebe, wie viel Zeit du jeden Tag gewinnst. Keine Kreditkarte nötig.</p>
+            <Link href="/login" className="btn btn-lg" style={{ background: '#04140f', color: 'var(--accent-a)' }}>Jetzt kostenlos loslegen <span className="arrow">→</span></Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ─────────────────────────────────────────── */}
+      <footer className="footer">
+        <div className="v-container">
+          <div className="footer-grid">
             <div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Produkt</h4>
-              <ul className="space-y-2">
-                <li><a href="#features" className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Features</a></li>
-                <li><a href="#preise" className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Preise</a></li>
-                <li><Link href="/login" className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Login</Link></li>
+              <Link href="/" className="brand" style={{ marginBottom: 14, display: 'inline-flex' }}>
+                <Image src="/assets/voyc-logo.png" alt="VOYC" width={34} height={34} />
+                <span className="word">VOYC</span>
+              </Link>
+              <p className="tagline">Die Voice-to-CRM App für professionelle Kundengespräche. Mit Leidenschaft gemacht in Deutschland.</p>
+            </div>
+            <div>
+              <h4>Produkt</h4>
+              <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Preise</a></li>
+                <li><Link href="/login">Login</Link></li>
               </ul>
             </div>
-
             <div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Rechtliches</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Impressum</a></li>
-                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Datenschutz</a></li>
-                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">AGB</a></li>
+              <h4>Rechtliches</h4>
+              <ul>
+                <li><a href="#">Impressum</a></li>
+                <li><a href="#">Datenschutz</a></li>
+                <li><a href="#">AGB</a></li>
               </ul>
             </div>
-
             <div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Kontakt</h4>
-              <ul className="space-y-3">
-                <li className="text-sm text-gray-600 dark:text-gray-400">Eeraj</li>
-                <li>
-                  <a href="mailto:info@voc-app.de" className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    info@voc-app.de
-                  </a>
-                </li>
-                <li className="text-sm text-gray-600 dark:text-gray-400">Deutschland</li>
+              <h4>Kontakt</h4>
+              <ul>
+                <li><a href="mailto:info@voyc-app.de">info@voyc-app.de</a></li>
+                <li><a href="#">Deutschland</a></li>
               </ul>
             </div>
           </div>
-
-          <div className="border-t border-emerald-200/30 dark:border-white/5 pt-8 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              © 2026 VoyC. Alle Rechte vorbehalten. Mit Leidenschaft gemacht in Deutschland.
-            </p>
-          </div>
+          <div className="footer-bottom">© 2026 VOYC. Alle Rechte vorbehalten.</div>
         </div>
       </footer>
-
-      {/* ========== FLOATING CTA ========== */}
-      <div className="fixed bottom-6 right-6 z-50 animate-fade-in-up">
-        <a
-          href="/login"
-          className="flex items-center gap-3 px-8 py-4 gradient-bg text-white font-bold rounded-2xl shadow-xl shadow-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          Kostenlos testen
-        </a>
-      </div>
     </div>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
   )
 }

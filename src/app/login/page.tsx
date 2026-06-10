@@ -4,10 +4,11 @@ import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTheme } from '@/contexts/ThemeContext'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function LoginPage() {
   const { signIn, signUp } = useAuth()
-  const { theme, toggleTheme } = useTheme()
+  const { toggleTheme } = useTheme()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
@@ -27,7 +28,6 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       let errorMessage = 'Ein Fehler ist aufgetreten'
-
       if (err.message?.includes('Invalid login credentials')) {
         errorMessage = 'Falsche E-Mail oder Passwort'
       } else if (err.message?.includes('User already registered')) {
@@ -37,7 +37,6 @@ export default function LoginPage() {
       } else {
         errorMessage = err.message || 'Unbekannter Fehler'
       }
-
       setError(errorMessage)
     } finally {
       setLoading(false)
@@ -45,134 +44,103 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50/50 via-teal-50/50 to-green-50/50 dark:from-zinc-950 dark:via-slate-950 dark:to-zinc-950 relative overflow-hidden p-4 transition-colors duration-300">
-      {/* Animated background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-600/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-500/10 dark:bg-teal-600/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+    <div className="voyc-root">
+      {/* Back link */}
+      <div className="auth-back">
+        <Link href="/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" style={{ width: 16, height: 16 }}>
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          Zurück zur Startseite
+        </Link>
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        {/* Theme Toggle */}
-        <div className="flex justify-end mb-6">
-          <button
-            onClick={toggleTheme}
-            className="p-3 rounded-xl glass-card hover:bg-emerald-50 dark:hover:bg-white/10 transition-all duration-300"
-            aria-label="Toggle theme"
-          >
-            {theme === 'light' ? (
-              <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            )}
-          </button>
-        </div>
+      {/* Theme toggle */}
+      <div className="auth-theme">
+        <button className="icon-btn" onClick={toggleTheme} aria-label="Theme wechseln">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" style={{ width: 18, height: 18 }}>
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          </svg>
+        </button>
+      </div>
 
-        <div className="glass-card rounded-3xl p-10">
-          {/* Logo */}
-          <Link href="/" className="flex justify-center mb-6">
-            <img
-              src="/logo.webp"
-              alt="VoyC Logo"
-              className="w-20 h-20 object-contain"
-            />
-          </Link>
+      <div className="auth-wrap">
+        <div className="auth-card">
+          <div className="auth-logo">
+            <Image src="/assets/voyc-logo.png" alt="VOYC" width={58} height={58} />
+          </div>
 
-          <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-2">
-            {isSignUp ? 'Jetzt registrieren' : 'Willkommen zurück'}
-          </h1>
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
+          {/* Tabs */}
+          <div className="auth-tabs">
+            <button
+              className={!isSignUp ? 'active' : ''}
+              onClick={() => { setIsSignUp(false); setError('') }}
+            >
+              Anmelden
+            </button>
+            <button
+              className={isSignUp ? 'active' : ''}
+              onClick={() => { setIsSignUp(true); setError('') }}
+            >
+              Registrieren
+            </button>
+          </div>
+
+          <h1>{isSignUp ? 'Jetzt registrieren' : 'Willkommen zurück'}</h1>
+          <p className="sub">
             {isSignUp
-              ? 'Starte jetzt mit VoyC und spare Zeit bei deinen Kundengesprächen'
-              : 'Melde dich an, um fortzufahren'}
+              ? 'Starte kostenlos — keine Kreditkarte nötig.'
+              : 'Melde dich an, um fortzufahren.'}
           </p>
 
-          {/* Info Box */}
-          {isSignUp && (
-            <div className="mb-6 p-4 glass rounded-xl border border-emerald-200/50 dark:border-emerald-900/30">
-              <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kostenlos testen</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Keine Kreditkarte erforderlich. 20 Berichte kostenlos pro Monat.</p>
-                </div>
-              </div>
-            </div>
-          )}
+          {error && <div className="verror">{error}</div>}
 
-          {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
-              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                E-Mail
-              </label>
+          <form onSubmit={handleSubmit}>
+            <div className="afield">
+              <label htmlFor="a-mail">E-Mail</label>
               <input
-                id="email"
+                className="ainput"
+                id="a-mail"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 glass-input rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500 transition-all"
                 placeholder="deine@email.de"
               />
             </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Passwort
-              </label>
+            <div className="afield">
+              <label htmlFor="a-pass">Passwort</label>
               <input
-                id="password"
+                className="ainput"
+                id="a-pass"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full px-4 py-3 glass-input rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500 transition-all"
                 placeholder="Mindestens 6 Zeichen"
               />
             </div>
-
             <button
+              className="btn btn-primary btn-block btn-lg"
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 px-4 gradient-bg text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-emerald-500/30 focus:ring-4 focus:ring-emerald-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02]"
+              style={{ marginTop: 6 }}
             >
-              {loading ? 'Lade...' : isSignUp ? 'Registrieren' : 'Anmelden'}
+              {loading ? 'Lade…' : isSignUp ? 'Registrieren' : 'Anmelden'}
             </button>
           </form>
 
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-              {isSignUp ? 'Bereits einen Account?' : 'Neu bei VoyC?'}
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setIsSignUp(!isSignUp)
-                setError('')
-              }}
-              className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
-            >
+          <p className="auth-switch">
+            {isSignUp ? 'Bereits einen Account?' : 'Neu bei VOYC?'}{' '}
+            <button onClick={() => { setIsSignUp(!isSignUp); setError('') }}>
               {isSignUp ? 'Jetzt anmelden' : 'Kostenlos registrieren →'}
             </button>
-          </div>
-        </div>
+          </p>
 
-        <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-8">
-          Enterprise Voice CRM for Field Sales Professionals
-        </p>
+          <p className="auth-foot">Enterprise Voice CRM für Field Sales Professionals</p>
+        </div>
       </div>
     </div>
   )
